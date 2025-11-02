@@ -13,12 +13,15 @@ import com.example.moodkitchen_jenn.ui.theme.TealPrimary
 
 @Composable
 fun MoodSelectionScreen(onMoodSelected: (String) -> Unit) {
-    val moods = listOf("Happy", "Tired", "Cozy", "Stressed")
+    val moods = listOf("😊 Happy",
+        "🥱 Tired",
+        "🍵 Cozy",
+        "😤 Stressed")
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PeachBackground)   // use your background color
+            .background(PeachBackground)   // use background color
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
