@@ -11,17 +11,22 @@ import com.example.moodkitchen_jenn.ui.theme.OrangeSecondary
 import com.example.moodkitchen_jenn.ui.theme.PeachBackground
 import com.example.moodkitchen_jenn.ui.theme.TealPrimary
 
+data class Mood(val emoji: String, val label: String)
+
 @Composable
 fun MoodSelectionScreen(onMoodSelected: (String) -> Unit) {
-    val moods = listOf("😊 Happy",
-        "🥱 Tired",
-        "🍵 Cozy",
-        "😤 Stressed")
+
+    val moods = listOf(
+        Mood("😊", "Happy"),
+        Mood("🥱", "Tired"),
+        Mood("🍵", "Cozy"),
+        Mood("😤", "Stressed")
+    )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PeachBackground)   // use background color
+            .background(PeachBackground)
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -29,19 +34,20 @@ fun MoodSelectionScreen(onMoodSelected: (String) -> Unit) {
         Text(
             text = "How are you feeling today?",
             style = MaterialTheme.typography.headlineSmall,
-            color = TealPrimary           // accent color for heading
+            color = TealPrimary
         )
         Spacer(Modifier.height(20.dp))
 
         moods.forEach { mood ->
             Button(
-                onClick = { onMoodSelected(mood) },
-                colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),  // orange buttons
+                onClick = { onMoodSelected(mood.label) }, // only send label, not emoji
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             ) {
-                Text(mood, color = PeachBackground) // text contrasting with button
+                // 4️⃣ Show both emoji and label in button text
+                Text("${mood.emoji} ${mood.label}", color = PeachBackground)
             }
         }
     }
