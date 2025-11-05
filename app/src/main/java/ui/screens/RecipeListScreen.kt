@@ -12,8 +12,9 @@ import com.example.moodkitchen_jenn.ui.theme.PeachBackground
 import com.example.moodkitchen_jenn.ui.theme.TealPrimary
 
 @Composable
-fun RecipeListScreen(mood: String) {
+fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Unit) {
     val recipes = RecipeRepository.getRecipesForMood(mood)
+
 
     Column(
         modifier = Modifier
@@ -27,7 +28,15 @@ fun RecipeListScreen(mood: String) {
             color = TealPrimary
         )
         Spacer(Modifier.height(16.dp))
-
+        Button(
+            onClick = onBackToMoods,
+            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Text("← Back to Moods", color = PeachBackground)
+        }
         recipes.forEach { recipe ->
             Card(
                 modifier = Modifier
@@ -41,5 +50,15 @@ fun RecipeListScreen(mood: String) {
                 }
             }
         }
+        Spacer(Modifier.height(24.dp))
+
+        OutlinedButton(
+            onClick = onGoHome,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("🏠 Home", color = TealPrimary)
+        }
     }
 }
+
+

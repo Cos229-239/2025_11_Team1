@@ -38,14 +38,21 @@ fun MoodKitchenApp() {
         }
 
         composable("moodSelection") {
-            MoodSelectionScreen { selectedMood ->
-                navController.navigate("recipes/$selectedMood")
-            }
+            MoodSelectionScreen(
+                onMoodSelected = { selectedMood ->
+                    navController.navigate("recipes/$selectedMood")
+                },
+                onGoHome = { navController.navigate("onboarding") }
+            )
         }
 
         composable("recipes/{mood}") { backStackEntry ->
             val mood = backStackEntry.arguments?.getString("mood") ?: ""
-            RecipeListScreen(mood)
+            RecipeListScreen(
+                mood = mood,
+                onGoHome = { navController.navigate("onboarding") },
+                onBackToMoods = { navController.navigate("moodSelection") }
+            )
         }
     }
 }
