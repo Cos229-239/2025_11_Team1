@@ -5,8 +5,18 @@ import com.example.moodkitchen_jenn.model.Recipe
 object RecipeRepository {
     private val recipes = mapOf(
         "Happy" to listOf(
-            Recipe("Berry Smoothie", "Sweet and refreshing start to your day."),
-            Recipe("Mango Salsa Tacos", "Fresh, bright, and colorful."),
+            Recipe(
+                "Berry Smoothie",
+                "Sweet and refreshing start to your day.",
+                ingredients = listOf("1 cup strawberries", "1 banana", "1/2 cup yogurt", "1 cup milk"),
+                directions = "Blend all ingredients until smooth and serve chilled."
+            ),
+            Recipe(
+                "Mango Salsa Tacos",
+                "Fresh, bright, and colorful.",
+                ingredients = listOf("2 mangoes", "1/2 red onion", "1 lime", "Taco shells"),
+                directions = "Mix diced mango, onion, and lime juice. Fill taco shells and enjoy."
+            ),
             Recipe("Ice Cream Sundae", "A delightful way to extend the good vibes."),
             Recipe("Sparkling Lemonade", "Fizzy, fun, and full of sunshine."),
             Recipe("Beef Tenderloin", "A hearty, feel-good meal that turns joy into flavor."),

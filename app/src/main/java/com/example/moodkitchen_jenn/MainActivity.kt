@@ -1,5 +1,6 @@
 package com.example.moodkitchen_jenn
 
+import android.R.attr.type
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,13 @@ import com.example.moodkitchen_jenn.ui.OnboardingScreen
 import com.example.moodkitchen_jenn.ui.screens.MoodSelectionScreen
 import com.example.moodkitchen_jenn.ui.screens.RecipeListScreen
 import com.example.moodkitchen_jenn.ui.theme.MoodKitchenTheme
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.example.moodkitchen_jenn.ui.screens.RecipeDetailScreen
+import com.example.moodkitchen_jenn.data.RecipeRepository
+import com.example.moodkitchen_jenn.model.Recipe
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +59,28 @@ fun MoodKitchenApp() {
             RecipeListScreen(
                 mood = mood,
                 onGoHome = { navController.navigate("onboarding") },
-                onBackToMoods = { navController.navigate("moodSelection") }
+                onBackToMoods = { navController.navigate("moodSelection") },
+                onRecipeClick = { Recipe ->
+                    navController.navigate("recipeDetail/${mood}/${Recipe.name}")
+                }
+            )
+        }
+        composable(
+            "recipeDetail/{mood}/{recipeName}",
+            arguments = listOf(
+                navArgument("mood") { type = NavType.StringType },
+                navArgument("recipeName") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val mood = backStackEntry.arguments?.getString("mood") ?: ""
+            val recipeName = backStackEntry.arguments?.getString("recipeName") ?: ""
+            val recipe = RecipeRepository.getRecipesForMood(mood)
+                .firstOrNull { it.name == recipeName } ?: return@composable
+
+            RecipeDetailScreen(
+                recipe = recipe,
+                onBack = { navController.popBackStack() },
+                onGoHome = { navController.navigate("onboarding") }
             )
         }
     }
