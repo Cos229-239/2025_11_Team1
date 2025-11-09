@@ -1,4 +1,4 @@
-package com.example.moodkitchen_jenn
+package com.example.moodkitchen
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

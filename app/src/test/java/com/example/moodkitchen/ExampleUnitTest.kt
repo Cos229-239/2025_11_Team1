@@ -1,4 +1,4 @@
-package com.example.moodkitchen_jenn
+package com.example.moodkitchen
 
 import org.junit.Test
 
