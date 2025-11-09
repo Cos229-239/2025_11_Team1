@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.moodkitchen_jenn"
+    namespace = "com.example.moodkitchen"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.moodkitchen_jenn"
+        applicationId = "com.example.moodkitchen"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

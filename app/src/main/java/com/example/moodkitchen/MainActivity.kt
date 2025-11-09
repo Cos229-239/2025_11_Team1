@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.moodkitchen.ui.screens.OnboardingScreen
+import com.example.moodkitchen.screens.OnboardingScreen
 import com.example.moodkitchen.ui.screens.MoodSelectionScreen
 import com.example.moodkitchen.ui.screens.RecipeListScreen
 import com.example.moodkitchen.ui.theme.MoodKitchenTheme
