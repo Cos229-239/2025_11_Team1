@@ -1,4 +1,4 @@
-package com.example.moodkitchen_jenn.ui.screens
+package com.example.moodkitchen.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.moodkitchen_jenn.ui.theme.OrangeSecondary
-import com.example.moodkitchen_jenn.ui.theme.PeachBackground
-import com.example.moodkitchen_jenn.ui.theme.TealPrimary
+import com.example.moodkitchen.ui.theme.OrangeSecondary
+import com.example.moodkitchen.ui.theme.PeachBackground
+import com.example.moodkitchen.ui.theme.TealPrimary
 
 data class Mood(val emoji: String, val label: String)
 

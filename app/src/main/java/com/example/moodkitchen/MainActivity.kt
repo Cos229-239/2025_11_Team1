@@ -1,6 +1,5 @@
-package com.example.moodkitchen_jenn
+package com.example.moodkitchen
 
-import android.R.attr.type
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,16 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.moodkitchen_jenn.ui.OnboardingScreen
-import com.example.moodkitchen_jenn.ui.screens.MoodSelectionScreen
-import com.example.moodkitchen_jenn.ui.screens.RecipeListScreen
-import com.example.moodkitchen_jenn.ui.theme.MoodKitchenTheme
+import com.example.moodkitchen.ui.screens.OnboardingScreen
+import com.example.moodkitchen.ui.screens.MoodSelectionScreen
+import com.example.moodkitchen.ui.screens.RecipeListScreen
+import com.example.moodkitchen.ui.theme.MoodKitchenTheme
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.example.moodkitchen_jenn.ui.screens.RecipeDetailScreen
-import com.example.moodkitchen_jenn.data.RecipeRepository
-import com.example.moodkitchen_jenn.model.Recipe
-
+import com.example.moodkitchen.ui.screens.RecipeDetailScreen
+import com.example.moodkitchen.data.RecipeRepository
 
 
 class MainActivity : ComponentActivity() {

@@ -1,6 +1,5 @@
-package com.example.moodkitchen_jenn.data
-
-import com.example.moodkitchen_jenn.model.Recipe
+package com.example.moodkitchen.data
+import com.example.moodkitchen.model.Recipe
 
 object RecipeRepository {
     private val recipes = mapOf(
@@ -52,8 +51,8 @@ object RecipeRepository {
             Recipe(
                 "Oat Latte",
                 "Comfort in a cup.",
-                ingredients = listOf("2 shots expresso", "1 cup oat milk", "1 tablespoon maple syrup", "1/2 teaspoon vanilla extract", "Cinnamon for dusting"),
-                directions = "Brew expresso shots and pour into mug. Heat oat milk in a saucepan until steaming but not boiling. Froth oat milk using a frother or whisk. Add maple syrup and vanilla to espresso. " + "Pour froth oat milk over espresso. Dust with cinnamon on top. Serve hot."
+                ingredients = listOf("2 shots espresso", "1 cup oat milk", "1 tablespoon maple syrup", "1/2 teaspoon vanilla extract", "Cinnamon for dusting"),
+                directions = "Brew espresso shots and pour into mug. Heat oat milk in a saucepan until steaming but not boiling. Froth oat milk using a frother or whisk. Add maple syrup and vanilla to espresso. " + "Pour froth oat milk over espresso. Dust with cinnamon on top. Serve hot."
             ),
             Recipe(
                 "Chicken Noodle Soup",

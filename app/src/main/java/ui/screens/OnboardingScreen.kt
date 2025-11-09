@@ -1,4 +1,6 @@
-package com.example.moodkitchen_jenn.ui
+package com.example.moodkitchen.ui.screens
+
+
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,7 +14,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.moodkitchen_jenn.R
+import com.example.moodkitchen.R
+
 
 @Composable
 fun OnboardingScreen(onContinueClicked: () -> Unit) {
