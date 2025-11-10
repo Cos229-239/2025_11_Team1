@@ -1,4 +1,4 @@
-package com.example.moodkitchen_jenn.ui.screens
+package com.example.moodkitchen.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -6,13 +6,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.moodkitchen_jenn.data.RecipeRepository
-import com.example.moodkitchen_jenn.ui.theme.OrangeSecondary
-import com.example.moodkitchen_jenn.ui.theme.PeachBackground
-import com.example.moodkitchen_jenn.ui.theme.TealPrimary
+import com.example.moodkitchen.data.RecipeRepository
+import com.example.moodkitchen.ui.theme.OrangeSecondary
+import com.example.moodkitchen.ui.theme.PeachBackground
+import com.example.moodkitchen.ui.theme.TealPrimary
+import androidx.compose.foundation.clickable
+import com.example.moodkitchen.model.Recipe
+
 
 @Composable
-fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Unit) {
+fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Unit, onRecipeClick: (Recipe) -> Unit) {
     val recipes = RecipeRepository.getRecipesForMood(mood)
 
 
@@ -41,7 +44,8 @@ fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Un
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 8.dp)
+                    .clickable { onRecipeClick(recipe) },
                 colors = CardDefaults.cardColors(containerColor = OrangeSecondary)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {

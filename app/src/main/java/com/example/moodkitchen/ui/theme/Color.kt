@@ -1,4 +1,4 @@
-package com.example.moodkitchen_jenn.ui.theme
+package com.example.moodkitchen.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
