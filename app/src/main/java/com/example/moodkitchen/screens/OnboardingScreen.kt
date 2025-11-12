@@ -15,11 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moodkitchen.R
-
+import com.example.moodkitchen.ui.theme.OrangeSecondary
 
 
 @Composable
-fun OnboardingScreen(onContinueClicked: () -> Unit) {
+fun OnboardingScreen(onContinueClicked: () -> Unit, onProfileClicked: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,6 +54,20 @@ fun OnboardingScreen(onContinueClicked: () -> Unit) {
             Text(
                 text = "Continue",
                 fontSize = 18.sp
+            )
+        }
+        Spacer(Modifier.height(16.dp))
+        // create profile Button
+        Button(
+            onClick = onProfileClicked,
+            colors = ButtonDefaults.buttonColors(OrangeSecondary),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Text(
+                "Log In / Create Profile",
+                fontSize = 20.sp
             )
         }
     }
