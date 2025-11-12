@@ -14,8 +14,11 @@ import com.example.moodkitchen.ui.theme.TealPrimary
 data class Mood(val emoji: String, val label: String)
 
 @Composable
-fun MoodSelectionScreen(onMoodSelected: (String) -> Unit,
-    onGoHome: () -> Unit) {
+fun MoodSelectionScreen(
+    onMoodSelected: (String) -> Unit,
+    onGoHome: () -> Unit,
+    onProfileClicked: () -> Unit
+) {
 
     val moods = listOf(
         Mood("😊", "Happy"),
@@ -59,7 +62,15 @@ fun MoodSelectionScreen(onMoodSelected: (String) -> Unit,
         ) {
             Text("🏠 Home", color = TealPrimary)
         }
+        Spacer(modifier = Modifier.height(24.dp))
+
+        OutlinedButton(onClick = onProfileClicked,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Profile")
+        }
     }
 }
+
 
 

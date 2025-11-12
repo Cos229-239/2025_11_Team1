@@ -1,5 +1,6 @@
 package com.example.moodkitchen.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,6 +14,9 @@ import com.example.moodkitchen.ui.theme.PeachBackground
 import com.example.moodkitchen.ui.theme.TealPrimary
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TextField
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import com.example.moodkitchen.R
 import com.example.moodkitchen.ui.theme.OrangeSecondary
 
 
@@ -21,7 +25,7 @@ fun ProfileScreen(
     profileViewModel: ProfileViewModel = viewModel(),
     onGoHome: () -> Unit,
     onBackToMoods: () -> Unit,
-    onContinueClicked: () -> Unit
+    onContinueClicked: () -> Unit,
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -35,11 +39,6 @@ fun ProfileScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text(
-            text = "Create / Edit Profile",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary
-        )
 
         val textFieldColors = TextFieldDefaults.colors(
             focusedContainerColor = PeachBackground,
@@ -58,6 +57,7 @@ fun ProfileScreen(
             label = { Text("Name") },
             colors = textFieldColors,
         )
+        Spacer(modifier = Modifier.height(10.dp))
 
         TextField(
             value = email,
@@ -65,6 +65,7 @@ fun ProfileScreen(
             label = { Text("Email") },
             colors = textFieldColors,
         )
+        Spacer(modifier = Modifier.height(10.dp))
 
         TextField(
             value = bio,
@@ -72,6 +73,7 @@ fun ProfileScreen(
             label = { Text("Bio") },
             colors = textFieldColors,
         )
+        Spacer(modifier = Modifier.height(10.dp))
 
         TextField(
             value = allergies,
@@ -79,6 +81,7 @@ fun ProfileScreen(
             label = { Text("Allergies") },
             colors = textFieldColors,
         )
+        Spacer(modifier = Modifier.height(10.dp))
 
         TextField(
             value = favorites,
@@ -103,10 +106,12 @@ fun ProfileScreen(
             colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(vertical = 12.dp)
         ) {
             Text("Save Profile", fontSize = 18.sp, color = MaterialTheme.colorScheme.background)
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = onBackToMoods,
@@ -115,7 +120,7 @@ fun ProfileScreen(
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         ) {
-            Text("← Back to Moods", color = PeachBackground)
+            Text("Moods", color = PeachBackground)
         }
 
         OutlinedButton(
@@ -123,6 +128,18 @@ fun ProfileScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("🏠 Home", color = TealPrimary)
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp), // optional top padding
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.outline_award_meal_24),
+                contentDescription = "App logo",
+                modifier = Modifier.size(150.dp) // adjust size as needed
+            )
         }
     }
 }

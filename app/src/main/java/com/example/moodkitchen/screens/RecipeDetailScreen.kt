@@ -24,7 +24,7 @@ import androidx.compose.material3.TopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeDetailScreen(recipe: Recipe, onBack: () -> Unit, onGoHome: () -> Unit) {
+fun RecipeDetailScreen(recipe: Recipe, onBack: () -> Unit, onGoHome: () -> Unit, onProfileClicked: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -62,5 +62,9 @@ fun RecipeDetailScreen(recipe: Recipe, onBack: () -> Unit, onGoHome: () -> Unit)
                 Text("🏠 Home")
             }
         }
+        Button(onClick = onProfileClicked) {
+            Text("Profile")
+        }
     }
 }
+

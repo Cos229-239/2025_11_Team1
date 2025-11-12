@@ -58,7 +58,8 @@ fun MoodKitchenApp() {
                 onMoodSelected = { selectedMood ->
                     navController.navigate("recipes/$selectedMood")
                 },
-                onGoHome = { navController.navigate("onboarding") }
+                onGoHome = { navController.navigate("onboarding") } ,
+                onProfileClicked = { navController.navigate("profileScreen") }
             )
         }
 
@@ -70,7 +71,8 @@ fun MoodKitchenApp() {
                 onBackToMoods = { navController.navigate("moodSelection") },
                 onRecipeClick = { Recipe ->
                     navController.navigate("recipeDetail/${mood}/${Recipe.name}")
-                }
+                },
+                onProfileClicked = { navController.navigate("profileScreen") }
             )
         }
         composable(
@@ -88,7 +90,8 @@ fun MoodKitchenApp() {
             RecipeDetailScreen(
                 recipe = recipe,
                 onBack = { navController.popBackStack() },
-                onGoHome = { navController.navigate("onboarding") }
+                onGoHome = { navController.navigate("onboarding") },
+                onProfileClicked = { navController.navigate("profileScreen") }
             )
         }
     }

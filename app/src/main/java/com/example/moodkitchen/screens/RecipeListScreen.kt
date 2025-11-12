@@ -15,7 +15,7 @@ import com.example.moodkitchen.model.Recipe
 
 
 @Composable
-fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Unit, onRecipeClick: (Recipe) -> Unit) {
+fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Unit, onRecipeClick: (Recipe) -> Unit, onProfileClicked: () -> Unit) {
     val recipes = RecipeRepository.getRecipesForMood(mood)
 
 
@@ -61,6 +61,9 @@ fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Un
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("🏠 Home", color = TealPrimary)
+        }
+        Button(onClick = onProfileClicked) {
+            Text("Profile")
         }
     }
 }
