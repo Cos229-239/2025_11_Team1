@@ -15,6 +15,8 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.moodkitchen.ui.screens.RecipeDetailScreen
 import com.example.moodkitchen.data.RecipeRepository
+import com.example.moodkitchen.screens.StartScreen
+import com.example.moodkitchen.screens.ProfileScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -34,8 +36,20 @@ fun MoodKitchenApp() {
 
     NavHost(
         navController = navController,
-        startDestination = "onboarding" //start with onboarding
+        startDestination = "StartScreen" //start with onboarding
     ) {
+        composable("StartScreen") {
+            StartScreen(
+                onContinueClicked = { navController.navigate("moodSelection") },
+                onProfileClicked = { navController.navigate("profileScreen") }
+            )
+        }
+
+        composable("profileScreen") {
+            ProfileScreen(
+                onContinueClicked = { navController.navigate("moodSelection") })
+        }
+
         composable("onboarding") {
             OnboardingScreen(onContinueClicked = {
                 navController.navigate("moodSelection")
