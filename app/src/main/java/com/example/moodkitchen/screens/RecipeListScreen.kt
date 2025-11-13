@@ -6,11 +6,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.moodkitchen.data.RecipeRepository
 import com.example.moodkitchen.ui.theme.OrangeSecondary
 import com.example.moodkitchen.ui.theme.PeachBackground
 import com.example.moodkitchen.ui.theme.TealPrimary
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.Alignment
 import com.example.moodkitchen.model.Recipe
 
 
@@ -49,23 +52,29 @@ fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Un
                 colors = CardDefaults.cardColors(containerColor = OrangeSecondary)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(recipe.name, style = MaterialTheme.typography.titleMedium, color = PeachBackground)
-                    Text(recipe.description, style = MaterialTheme.typography.bodySmall, color = PeachBackground)
+                    Text(
+                        recipe.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = PeachBackground
+                    )
+                    Text(
+                        recipe.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = PeachBackground
+                    )
                 }
             }
         }
         Spacer(Modifier.height(24.dp))
 
-        OutlinedButton(
-            onClick = onGoHome,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("🏠 Home", color = TealPrimary)
-        }
-        Button(onClick = onProfileClicked) {
-            Text("Profile")
+        Column {
+            OutlinedButton(onClick = onGoHome, modifier = Modifier.fillMaxWidth()) {
+                Text("🏠 Home", color = TealPrimary)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedButton(onClick = onProfileClicked, modifier = Modifier.fillMaxWidth()) {
+                Text("Profile", color = TealPrimary)
+            }
         }
     }
 }
-
-

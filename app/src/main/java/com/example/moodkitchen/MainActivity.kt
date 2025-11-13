@@ -47,7 +47,7 @@ fun MoodKitchenApp() {
         composable("profileScreen") {
             ProfileScreen(
                 onContinueClicked = { navController.navigate("moodSelection") },
-                onGoHome = { navController.navigate("onboarding") },
+                onGoHome = { navController.navigate("OnboardingScreen") },
                 onBackToMoods = { navController.navigate("moodSelection") }
             )
         }
@@ -58,7 +58,7 @@ fun MoodKitchenApp() {
                 onMoodSelected = { selectedMood ->
                     navController.navigate("recipes/$selectedMood")
                 },
-                onGoHome = { navController.navigate("onboarding") } ,
+                onGoHome = { navController.navigate("OnboardingScreen") } ,
                 onProfileClicked = { navController.navigate("profileScreen") }
             )
         }
@@ -67,10 +67,10 @@ fun MoodKitchenApp() {
             val mood = backStackEntry.arguments?.getString("mood") ?: ""
             RecipeListScreen(
                 mood = mood,
-                onGoHome = { navController.navigate("onboarding") },
+                onGoHome = { navController.navigate("OnboardingScreen") },
                 onBackToMoods = { navController.navigate("moodSelection") },
-                onRecipeClick = { Recipe ->
-                    navController.navigate("recipeDetail/${mood}/${Recipe.name}")
+                onRecipeClick = { recipe ->
+                    navController.navigate("recipeDetail/${mood}/${recipe.name}")
                 },
                 onProfileClicked = { navController.navigate("profileScreen") }
             )
@@ -90,7 +90,7 @@ fun MoodKitchenApp() {
             RecipeDetailScreen(
                 recipe = recipe,
                 onBack = { navController.popBackStack() },
-                onGoHome = { navController.navigate("onboarding") },
+                onGoHome = { navController.navigate("OnboardingScreen") },
                 onProfileClicked = { navController.navigate("profileScreen") }
             )
         }
