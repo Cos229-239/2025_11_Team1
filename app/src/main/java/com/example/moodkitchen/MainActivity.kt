@@ -23,7 +23,6 @@ import com.example.moodkitchen.screens.ProfileScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         super.onCreate(savedInstanceState)
         setContent {
             MoodKitchenTheme {
@@ -36,27 +35,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MoodKitchenApp() {
     val navController = rememberNavController()
-    LaunchedEffect(Unit) {
-        try {
-            // clear any restored back stack and go to onboarding (home)
-            navController.navigate("OnboardingScreen") {
-                // pop up to the graph's start destination (clears back stack)
-                popUpTo(navController.graph.findStartDestination().id) {
-                    inclusive = true
-                }
-                // avoid building up duplicate entries
-                launchSingleTop = true
-            }
-        } catch (e: Exception) {
-            // If the graph isn't ready yet, ignore — NavHost will still start at startDestination.
-        }
-    }
-
 
     NavHost(
         navController = navController,
         startDestination = "OnboardingScreen" //start with onboarding
-
     ) {
         composable("OnboardingScreen") {
             OnboardingScreen(
