@@ -22,17 +22,29 @@ import com.example.moodkitchen.ui.theme.OrangeSecondary
 
 @Composable
 fun ProfileScreen(
-    profileViewModel: ProfileViewModel = viewModel(),
+    profileViewModel: ProfileViewModel,
     onGoHome: () -> Unit,
     onBackToMoods: () -> Unit,
     onContinueClicked: () -> Unit,
 ) {
+    val profile by profileViewModel.profile.collectAsState()
+
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var bio by remember { mutableStateOf("") }
     var allergies by remember { mutableStateOf("") }
     var favorites by remember { mutableStateOf("") }
 
+LaunchedEffect(profile) {
+
+    profile?.let { loaded->
+        name = loaded.name
+        email = loaded.email
+        bio = loaded.bio
+        allergies = loaded.allergies
+        favorites = loaded.favorites
+    }
+}
     Column(
         modifier = Modifier
             .fillMaxSize()
