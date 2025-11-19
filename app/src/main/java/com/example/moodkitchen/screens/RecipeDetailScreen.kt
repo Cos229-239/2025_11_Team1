@@ -45,7 +45,7 @@ fun RecipeDetailScreen(recipe: Recipe, onBack: () -> Unit, onGoHome: () -> Unit,
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedButton(onClick = onProfileClicked, modifier = Modifier.fillMaxWidth()) {
-                    Text("Profile", color = TealPrimary)
+                    Text("👤 Profile", color = TealPrimary)
                 }
             }
         }

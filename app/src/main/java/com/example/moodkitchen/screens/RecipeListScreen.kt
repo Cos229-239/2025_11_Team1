@@ -73,7 +73,7 @@ fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Un
             }
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedButton(onClick = onProfileClicked, modifier = Modifier.fillMaxWidth()) {
-                Text("Profile", color = TealPrimary)
+                Text("👤 Profile", color = TealPrimary)
             }
         }
     }

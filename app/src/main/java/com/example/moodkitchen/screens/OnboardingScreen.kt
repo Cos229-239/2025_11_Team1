@@ -31,20 +31,20 @@ fun OnboardingScreen(onContinueClicked: () -> Unit, onProfileClicked: () -> Unit
         // App Name
         Text(
             text = "Mood Kitchen",
-            fontSize = 36.sp,
+            fontSize = 42.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 24.dp)
         )
+        Spacer(Modifier.height(16.dp))
 
         // App Icon
         Image(
             painter = painterResource(id = R.drawable.outline_award_meal_24), // put icon here
             contentDescription = "App logo",
-            modifier = Modifier
-                .size(150.dp)
-                .padding(bottom = 32.dp)
+            modifier = Modifier.size(300.dp).padding(bottom = 32.dp)
         )
-
+        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
         // Continue Button
         Button(
             onClick = onContinueClicked,
@@ -60,14 +60,13 @@ fun OnboardingScreen(onContinueClicked: () -> Unit, onProfileClicked: () -> Unit
         // create profile Button
         Button(
             onClick = onProfileClicked,
+            shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(OrangeSecondary),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
+            modifier = Modifier.fillMaxWidth(0.8f)
         ) {
             Text(
                 "Log In / Create Profile",
-                fontSize = 20.sp
+                fontSize = 18.sp
             )
         }
     }
