@@ -1,5 +1,6 @@
 package com.example.moodkitchen.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +21,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import com.example.moodkitchen.ui.theme.OrangeSecondary
 import com.example.moodkitchen.ui.theme.TealPrimary
 
@@ -56,6 +60,17 @@ fun RecipeDetailScreen(recipe: Recipe, onBack: () -> Unit, onGoHome: () -> Unit,
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            Image(
+                painter = painterResource(id = recipe.imageRes),
+                contentDescription = recipe.name,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .padding(bottom = 16.dp),
+                contentScale = ContentScale.Crop
+            )
+
             Text(text = recipe.description, style = MaterialTheme.typography.bodyMedium)
 
             if (recipe.ingredients.isNotEmpty()) {
