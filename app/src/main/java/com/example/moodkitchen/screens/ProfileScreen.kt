@@ -102,6 +102,7 @@ fun ProfileScreen(
                     favorites = favorites
                 )
                 profileViewModel.saveProfile(newProfile)
+                onContinueClicked()
             },
             colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
             modifier = Modifier
@@ -109,6 +110,7 @@ fun ProfileScreen(
                 .padding(vertical = 12.dp)
         ) {
             Text("Save Profile", fontSize = 18.sp, color = MaterialTheme.colorScheme.background)
+
         }
 
         Spacer(modifier = Modifier.height(24.dp))

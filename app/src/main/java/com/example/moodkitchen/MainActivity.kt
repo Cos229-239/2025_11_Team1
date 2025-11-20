@@ -15,8 +15,8 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.moodkitchen.ui.screens.RecipeDetailScreen
 import com.example.moodkitchen.data.RecipeRepository
+import com.example.moodkitchen.screens.ProfileDetailScreen
 import com.example.moodkitchen.screens.ProfileScreen
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,20 +46,15 @@ fun MoodKitchenApp() {
 
         composable("profileScreen") {
             ProfileScreen(
-                onContinueClicked = { navController.navigate("moodSelection") },
+                onContinueClicked = { navController.navigate("profileDetail") },
                 onGoHome = { navController.navigate("OnboardingScreen") },
                 onBackToMoods = { navController.navigate("moodSelection") }
             )
         }
 
-
-        composable("moodSelection") {
-            MoodSelectionScreen(
-                onMoodSelected = { selectedMood ->
-                    navController.navigate("recipes/$selectedMood")
-                },
-                onGoHome = { navController.navigate("OnboardingScreen") } ,
-                onProfileClicked = { navController.navigate("profileScreen") }
+        composable("profileDetail") {
+            ProfileDetailScreen(
+                onBack = { navController.popBackStack() }
             )
         }
 
