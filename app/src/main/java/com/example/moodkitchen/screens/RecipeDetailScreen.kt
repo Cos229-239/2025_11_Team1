@@ -1,4 +1,4 @@
-package com.example.moodkitchen.screens
+package com.example.moodkitchen.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState

@@ -101,10 +101,7 @@ fun ProfileScreen(
                     allergies = allergies,
                     favorites = favorites
                 )
-                profileViewModel.saveProfile(newProfile){ // Puts the profile in the viewmodel
-                    onContinueClicked()
-                }
-
+                profileViewModel.saveProfile(newProfile)
             },
             colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
             modifier = Modifier
@@ -112,7 +109,6 @@ fun ProfileScreen(
                 .padding(vertical = 12.dp)
         ) {
             Text("Save Profile", fontSize = 18.sp, color = MaterialTheme.colorScheme.background)
-
         }
 
         Spacer(modifier = Modifier.height(24.dp))
