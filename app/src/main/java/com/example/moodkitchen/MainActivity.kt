@@ -8,15 +8,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.moodkitchen.screens.OnboardingScreen
-import com.example.moodkitchen.ui.screens.MoodSelectionScreen
-import com.example.moodkitchen.ui.screens.RecipeListScreen
+import com.example.moodkitchen.screens.RecipeListScreen
 import com.example.moodkitchen.ui.theme.MoodKitchenTheme
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.example.moodkitchen.ui.screens.RecipeDetailScreen
+import com.example.moodkitchen.screens.RecipeDetailScreen
 import com.example.moodkitchen.data.RecipeRepository
+import com.example.moodkitchen.screens.ProfileDetailScreen
 import com.example.moodkitchen.screens.ProfileScreen
-
+import com.example.moodkitchen.screens.MoodSelectionScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,22 +44,29 @@ fun MoodKitchenApp() {
             )
         }
 
-        composable("profileScreen") {
-            ProfileScreen(
-                onContinueClicked = { navController.navigate("moodSelection") },
-                onGoHome = { navController.navigate("OnboardingScreen") },
-                onBackToMoods = { navController.navigate("moodSelection") }
-            )
-        }
-
-
         composable("moodSelection") {
             MoodSelectionScreen(
                 onMoodSelected = { selectedMood ->
                     navController.navigate("recipes/$selectedMood")
                 },
                 onGoHome = { navController.navigate("OnboardingScreen") } ,
-                onProfileClicked = { navController.navigate("profileScreen") }
+                onProfileClicked = { navController.navigate("profileDetail") }
+            )
+        }
+
+        composable("profileScreen") {
+            ProfileScreen(
+                onContinueClicked = { navController.navigate("profileDetail") },
+                onGoHome = { navController.navigate("OnboardingScreen") },
+                onBackToMoods = { navController.navigate("moodSelection") }
+            )
+        }
+
+        composable("profileDetail") {
+            ProfileDetailScreen(
+
+                    onContinueClicked = { navController.navigate("moodSelection") },
+                    onBack = { navController.popBackStack() }
             )
         }
 

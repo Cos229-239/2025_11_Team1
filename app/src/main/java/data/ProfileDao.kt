@@ -12,7 +12,7 @@ interface ProfileDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProfile(profile: Profile)
 
-    @Query("SELECT * FROM profiles LIMIT 1")
+    @Query("SELECT * FROM profiles ORDER BY id DESC LIMIT 1")
     suspend fun getProfile(): Profile?
 
     @Update
