@@ -2,6 +2,7 @@ package com.example.moodkitchen.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -16,8 +17,12 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TextField
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import com.example.moodkitchen.R
 import com.example.moodkitchen.ui.theme.OrangeSecondary
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 
 
 @Composable
@@ -28,7 +33,7 @@ fun ProfileScreen(
     onContinueClicked: () -> Unit,
 ) {
     val profile by profileViewModel.profile.collectAsState()
-
+    var password by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var bio by remember { mutableStateOf("") }
@@ -38,6 +43,7 @@ fun ProfileScreen(
 LaunchedEffect(profile) {
 
     profile?.let { loaded->
+        password = loaded.password
         name = loaded.name
         email = loaded.email
         bio = loaded.bio
@@ -62,6 +68,7 @@ LaunchedEffect(profile) {
             unfocusedIndicatorColor = OrangeSecondary
         )
 
+
         Text("Create / Edit Profile", style = MaterialTheme.typography.headlineSmall)
         TextField(
             value = name,
@@ -71,6 +78,7 @@ LaunchedEffect(profile) {
         )
         Spacer(modifier = Modifier.height(10.dp))
 
+
         TextField(
             value = email,
             onValueChange = { email = it },
@@ -78,6 +86,26 @@ LaunchedEffect(profile) {
             colors = textFieldColors,
         )
         Spacer(modifier = Modifier.height(10.dp))
+
+        var passwordVisible by remember { mutableStateOf(false) }
+        TextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                val image = if (passwordVisible)
+                    Icons.Filled.Visibility
+                else
+                    Icons.Filled.VisibilityOff
+
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(imageVector = image, contentDescription = null)
+                }
+            }
+        )
+
+
 
         TextField(
             value = bio,
@@ -109,6 +137,7 @@ LaunchedEffect(profile) {
                 val newProfile = Profile(
                     name = name,
                     email = email,
+                    password = password,
                     bio = bio,
                     allergies = allergies,
                     favorites = favorites
