@@ -5,11 +5,12 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "profiles")
 data class Profile(
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
+    @PrimaryKey(autoGenerate = true) val id: Int? = null,
     val name: String,
     val email: String,
-    val password: String,
     val bio: String,
+    val username: String,
+    val password: String,
     val allergies: String = "",
     val favorites: String = ""
 )

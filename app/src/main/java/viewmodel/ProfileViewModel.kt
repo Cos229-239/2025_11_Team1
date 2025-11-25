@@ -22,7 +22,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private val _profile = MutableStateFlow<Profile?>(null)
     val profile: StateFlow<Profile?> = _profile
-    init{
+
+    // Tracks session login state
+    val isLoggedIn = MutableStateFlow(false)
+
+    init {
         loadProfile()
     }
 
@@ -30,16 +34,20 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO) {
             profileDao.insertProfile(profile)
             _profile.value = profileDao.getProfile()
-
-
         }
     }
-    fun loadProfile()
-    {
-        viewModelScope.launch(Dispatchers.IO){
+
+    fun loadProfile() {
+        viewModelScope.launch(Dispatchers.IO) {
             _profile.value = profileDao.getProfile()
         }
     }
 
+    fun logIn() {
+        isLoggedIn.value = true
+    }
 
+    fun logOut() {
+        isLoggedIn.value = false
+    }
 }

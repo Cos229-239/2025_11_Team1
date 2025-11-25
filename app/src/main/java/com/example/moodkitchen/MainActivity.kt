@@ -7,6 +7,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,6 +26,7 @@ import androidx.navigation.navArgument
 import com.example.moodkitchen.data.ProfileViewModel
 import com.example.moodkitchen.ui.screens.RecipeDetailScreen
 import com.example.moodkitchen.data.RecipeRepository
+import com.example.moodkitchen.screens.LoginDialog
 import com.example.moodkitchen.screens.ProfileScreen
 
 
@@ -40,17 +46,38 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MoodKitchenApp() {
     val navController = rememberNavController()
-
     val profileViewModel: ProfileViewModel = viewModel()
+    val profile by profileViewModel.profile.collectAsState()
+    val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
+
+    // Show login dialog only if user exists and not logged in
+    var showLoginDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(profile, isLoggedIn) {
+        showLoginDialog = profile != null && profile!!.username.isNotEmpty() && !isLoggedIn
+    }
+
+    if (showLoginDialog && profile != null) {
+        LoginDialog(
+            profile = profile!!,
+            onLoginSuccess = {
+                profileViewModel.logIn()
+                showLoginDialog = false
+            },
+            onCancel = { showLoginDialog = false }
+        )
+    }
 
     NavHost(
         navController = navController,
-        startDestination = "OnboardingScreen" //start with onboarding
+        startDestination = "OnboardingScreen"
     ) {
         composable("OnboardingScreen") {
             OnboardingScreen(
+                navController = navController,
                 onContinueClicked = { navController.navigate("moodSelection") },
-                onProfileClicked = { navController.navigate("profileScreen") }
+                onProfileClicked = { navController.navigate("profileScreen") },
+                profileViewModel = profileViewModel
             )
         }
 
@@ -63,13 +90,12 @@ fun MoodKitchenApp() {
             )
         }
 
-
         composable("moodSelection") {
             MoodSelectionScreen(
                 onMoodSelected = { selectedMood ->
                     navController.navigate("recipes/$selectedMood")
                 },
-                onGoHome = { navController.navigate("OnboardingScreen") } ,
+                onGoHome = { navController.navigate("OnboardingScreen") },
                 onProfileClicked = { navController.navigate("profileScreen") }
             )
         }
@@ -86,6 +112,7 @@ fun MoodKitchenApp() {
                 onProfileClicked = { navController.navigate("profileScreen") }
             )
         }
+
         composable(
             "recipeDetail/{mood}/{recipeName}",
             arguments = listOf(

@@ -1,5 +1,7 @@
 package com.example.moodkitchen.screens
 
+import android.R.attr.name
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -8,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moodkitchen.data.Profile
 import com.example.moodkitchen.data.ProfileViewModel
 import com.example.moodkitchen.ui.theme.PeachBackground
@@ -23,6 +24,13 @@ import com.example.moodkitchen.R
 import com.example.moodkitchen.ui.theme.OrangeSecondary
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 
 
 @Composable
@@ -33,24 +41,27 @@ fun ProfileScreen(
     onContinueClicked: () -> Unit,
 ) {
     val profile by profileViewModel.profile.collectAsState()
-    var password by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var bio by remember { mutableStateOf("") }
-    var allergies by remember { mutableStateOf("") }
-    var favorites by remember { mutableStateOf("") }
+    var nameState by remember { mutableStateOf("") }
+    var emailState by remember { mutableStateOf("") }
+    var usernameState by remember { mutableStateOf("") }
+    var passwordState by remember { mutableStateOf("") }
+    var bioState by remember { mutableStateOf("") }
+    var allergiesState by remember { mutableStateOf("") }
+    var favoritesState by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
-LaunchedEffect(profile) {
-
-    profile?.let { loaded->
-        password = loaded.password
-        name = loaded.name
-        email = loaded.email
-        bio = loaded.bio
-        allergies = loaded.allergies
-        favorites = loaded.favorites
+    LaunchedEffect(profile) {
+        profile?.let { loaded ->
+            nameState = loaded.name
+            emailState = loaded.email
+            usernameState = loaded.username
+            passwordState = loaded.password
+            bioState = loaded.bio
+            allergiesState = loaded.allergies
+            favoritesState = loaded.favorites
+        }
     }
-}
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -71,26 +82,38 @@ LaunchedEffect(profile) {
 
         Text("Create / Edit Profile", style = MaterialTheme.typography.headlineSmall)
         TextField(
-            value = name,
-            onValueChange = { name = it },
+            value = nameState,
+            onValueChange = { nameState = it },
             label = { Text("Name") },
             colors = textFieldColors,
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
 
         TextField(
-            value = email,
-            onValueChange = { email = it },
+            value = emailState,
+            onValueChange = { emailState = it },
             label = { Text("Email") },
             colors = textFieldColors,
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
+        var username by remember { mutableStateOf("") }
+        var password by remember { mutableStateOf("") }
+
+        TextField(
+            value = usernameState,
+            onValueChange = { usernameState = it },
+            label = { Text("Username") },
+            colors = textFieldColors,
+        )
+        Spacer(Modifier.height(5.dp))
+
+        var passwordState by remember { mutableStateOf("") }
         var passwordVisible by remember { mutableStateOf(false) }
         TextField(
-            value = password,
-            onValueChange = { password = it },
+            value = passwordState,
+            onValueChange = { passwordState = it },
             label = { Text("Password") },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -105,44 +128,44 @@ LaunchedEffect(profile) {
             }
         )
 
-
+        Spacer(modifier = Modifier.height(5.dp))
 
         TextField(
-            value = bio,
-            onValueChange = { bio = it },
+            value = bioState,
+            onValueChange = { bioState = it },
             label = { Text("Bio") },
             colors = textFieldColors,
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
         TextField(
-            value = allergies,
-            onValueChange = { allergies = it },
+            value = allergiesState,
+            onValueChange = { allergiesState = it },
             label = { Text("Allergies") },
             colors = textFieldColors,
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
         TextField(
-            value = favorites,
-            onValueChange = { favorites = it },
+            value = favoritesState,
+            onValueChange = { favoritesState = it },
             label = { Text("Favorites") },
             colors = textFieldColors,
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
-
         Button(
             onClick = {
                 val newProfile = Profile(
-                    name = name,
-                    email = email,
-                    password = password,
-                    bio = bio,
-                    allergies = allergies,
-                    favorites = favorites
+                    name = nameState,
+                    email = emailState,
+                    username = usernameState,
+                    password = passwordState,
+                    bio = bioState,
+                    allergies = allergiesState,
+                    favorites = favoritesState
                 )
                 profileViewModel.saveProfile(newProfile)
+                Toast.makeText(context, "Profile info saved!", Toast.LENGTH_SHORT).show()
             },
             colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
             modifier = Modifier
@@ -151,8 +174,6 @@ LaunchedEffect(profile) {
         ) {
             Text("Save Profile", fontSize = 18.sp, color = MaterialTheme.colorScheme.background)
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = onBackToMoods,
