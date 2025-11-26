@@ -39,6 +39,7 @@ fun ProfileScreen(
     isLoggedIn: Boolean,
 ) {
     val profile by profileViewModel.profile.collectAsState()
+    val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
     val context = LocalContext.current
 
     var nameState by remember { mutableStateOf("") }
@@ -180,6 +181,23 @@ fun ProfileScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("🏠 Home", color = TealPrimary)
+        }
+
+        // LOGOUT BUTTON (only show if logged in)
+        if (isLoggedIn) {
+            Button(
+                onClick = {
+                    profileViewModel.logOut() // clears logged-in state but keeps profile saved
+                    Toast.makeText(context, "Logged out successfully", Toast.LENGTH_SHORT).show()
+                    onGoHome()
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text("Log Out", color = MaterialTheme.colorScheme.background)
+            }
         }
 
         // LOGO

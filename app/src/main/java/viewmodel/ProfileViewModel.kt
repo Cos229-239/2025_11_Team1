@@ -46,6 +46,9 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
         }
     }
+    init {
+        loadProfile()
+    }
 
     // Log in / Log out functions
     fun logIn() {
@@ -54,9 +57,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun logOut() {
         viewModelScope.launch(Dispatchers.IO) {
-            profileDao.clearProfile() // delete all profiles in DB
-            _profile.value = null
+            _isLoggedIn.value = false
         }
-        _isLoggedIn.value = false
     }
 }

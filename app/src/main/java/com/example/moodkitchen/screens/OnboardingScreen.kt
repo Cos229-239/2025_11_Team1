@@ -41,6 +41,12 @@ fun OnboardingScreen(
     var showLoginDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
+    LaunchedEffect(profile, isLoggedIn) {
+        if (profile != null && isLoggedIn) {
+            Toast.makeText(context, "Account already logged in", Toast.LENGTH_SHORT).show()
+            onContinueClicked() // auto go to moods if logged in
+        }
+    }
 
     Column(
         modifier = Modifier
