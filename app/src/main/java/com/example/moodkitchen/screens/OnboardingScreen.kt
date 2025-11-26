@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +26,7 @@ import androidx.navigation.NavHostController
 import com.example.moodkitchen.R
 import viewmodel.ProfileViewModel
 import com.example.moodkitchen.ui.theme.OrangeSecondary
+import com.example.moodkitchen.ui.theme.TealPrimary
 
 
 @Composable
@@ -53,53 +55,61 @@ fun OnboardingScreen(
         Image(painter = painterResource(id = R.drawable.outline_award_meal_24), contentDescription = "App logo", modifier = Modifier.size(300.dp).padding(bottom = 32.dp))
         Spacer(Modifier.height(16.dp))
 
-        // Continue / Login button
+        // LOG IN button
         Button(
             onClick = {
-                if (!isLoggedIn && profile != null && profile!!.username.isNotEmpty()) {
-                    showLoginDialog = true
+                if (profile != null) {
+                    if (!isLoggedIn) {
+                        showLoginDialog = true
+                    } else {
+                        Toast.makeText(context, "Account already logged in", Toast.LENGTH_SHORT).show()
+                        navController.navigate("moodSelection")
+                    }
                 } else {
-                    onContinueClicked()
+                    Toast.makeText(context, "No account found. Please create a profile first.", Toast.LENGTH_SHORT).show()
                 }
             },
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
-            Text("Log In / Continue", fontSize = 18.sp)
+            Text("Log In", fontSize = 18.sp)
         }
 
         Spacer(Modifier.height(16.dp))
 
-        // Create Profile
+        // CONTINUE button → always goes to moods
         Button(
-            onClick = {
-                if (isLoggedIn) {
-                    Toast.makeText(context, "Account already logged in", Toast.LENGTH_SHORT).show()
-                    onContinueClicked() // go to moods screen
-                } else {
-                    onProfileClicked() // go to profile screen
-                }
-            },
+            onClick = { navController.navigate("moodSelection") },
             shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(OrangeSecondary),
+            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
+            modifier = Modifier.fillMaxWidth(0.8f)
+        ) {
+            Text("Continue to Moods", fontSize = 18.sp)
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        // CREATE PROFILE button → goes to profile screen
+        Button(
+            onClick = { navController.navigate("profileScreen") },
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
             Text("Create Profile", fontSize = 18.sp)
         }
 
-
-        // Login dialog
+        // LOGIN DIALOG
         if (showLoginDialog && profile != null) {
             LoginDialog(
                 profile = profile!!,
                 onLoginSuccess = {
                     profileViewModel.logIn()
                     showLoginDialog = false
-                    onContinueClicked()
+                    navController.navigate("moodSelection")
                 },
                 onCancel = { showLoginDialog = false }
             )
         }
-
     }
 }
