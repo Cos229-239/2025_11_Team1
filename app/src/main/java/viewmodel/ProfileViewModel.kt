@@ -1,10 +1,11 @@
-package com.example.moodkitchen.data
+package viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
+import com.example.moodkitchen.data.AppDatabase
+import com.example.moodkitchen.data.Profile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +25,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val profile: StateFlow<Profile?> = _profile
 
     // Tracks session login state
-    val isLoggedIn = MutableStateFlow(false)
+    private val _isLoggedIn = MutableStateFlow(false)
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
 
     init {
         loadProfile()
@@ -34,20 +36,27 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO) {
             profileDao.insertProfile(profile)
             _profile.value = profileDao.getProfile()
+            _isLoggedIn.value = true
         }
     }
 
     fun loadProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             _profile.value = profileDao.getProfile()
+
         }
     }
 
+    // Log in / Log out functions
     fun logIn() {
-        isLoggedIn.value = true
+        _isLoggedIn.value = true
     }
 
     fun logOut() {
-        isLoggedIn.value = false
+        viewModelScope.launch(Dispatchers.IO) {
+            profileDao.clearProfile() // delete all profiles in DB
+            _profile.value = null
+        }
+        _isLoggedIn.value = false
     }
 }

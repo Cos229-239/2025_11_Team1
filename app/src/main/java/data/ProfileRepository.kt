@@ -1,7 +1,7 @@
 package com.example.moodkitchen.data
 
 class ProfileRepository(private val dao: ProfileDao) {
-    suspend fun insert(profile: Profile) = dao.insertProfile(profile)
-    suspend fun getProfile() = dao.getProfile()
-    suspend fun update(profile: Profile) = dao.updateProfile(profile)
+    suspend fun save(profile: Profile) = dao.insertProfile(profile) // handles insert or update
+    suspend fun getProfile(): Profile? = dao.getProfile()
+    suspend fun clearProfile() = dao.clearProfile()
 }

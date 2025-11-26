@@ -1,10 +1,8 @@
 package com.example.moodkitchen
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -12,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.composable
@@ -23,7 +20,7 @@ import com.example.moodkitchen.ui.screens.RecipeListScreen
 import com.example.moodkitchen.ui.theme.MoodKitchenTheme
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.example.moodkitchen.data.ProfileViewModel
+import viewmodel.ProfileViewModel
 import com.example.moodkitchen.ui.screens.RecipeDetailScreen
 import com.example.moodkitchen.data.RecipeRepository
 import com.example.moodkitchen.screens.LoginDialog
@@ -82,13 +79,19 @@ fun MoodKitchenApp() {
         }
 
         composable("profileScreen") {
+            val profile by profileViewModel.profile.collectAsState()
+            val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
+
             ProfileScreen(
                 profileViewModel = profileViewModel,
+                profile = profile,
+                isLoggedIn = isLoggedIn,
                 onContinueClicked = { navController.navigate("moodSelection") },
                 onGoHome = { navController.navigate("OnboardingScreen") },
                 onBackToMoods = { navController.navigate("moodSelection") }
             )
         }
+
 
         composable("moodSelection") {
             MoodSelectionScreen(

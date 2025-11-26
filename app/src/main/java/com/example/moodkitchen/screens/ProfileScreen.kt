@@ -1,36 +1,32 @@
 package com.example.moodkitchen.screens
 
-import android.R.attr.name
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.moodkitchen.data.Profile
-import com.example.moodkitchen.data.ProfileViewModel
-import com.example.moodkitchen.ui.theme.PeachBackground
-import com.example.moodkitchen.ui.theme.TealPrimary
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TextField
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import com.example.moodkitchen.R
-import com.example.moodkitchen.ui.theme.OrangeSecondary
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import viewmodel.ProfileViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.sp
+import com.example.moodkitchen.ui.theme.OrangeSecondary
+import com.example.moodkitchen.ui.theme.PeachBackground
+import com.example.moodkitchen.ui.theme.TealPrimary
+import com.example.moodkitchen.R
 
 
 @Composable
@@ -39,8 +35,12 @@ fun ProfileScreen(
     onGoHome: () -> Unit,
     onBackToMoods: () -> Unit,
     onContinueClicked: () -> Unit,
+    profile: Profile?,
+    isLoggedIn: Boolean,
 ) {
     val profile by profileViewModel.profile.collectAsState()
+    val context = LocalContext.current
+
     var nameState by remember { mutableStateOf("") }
     var emailState by remember { mutableStateOf("") }
     var usernameState by remember { mutableStateOf("") }
@@ -48,8 +48,9 @@ fun ProfileScreen(
     var bioState by remember { mutableStateOf("") }
     var allergiesState by remember { mutableStateOf("") }
     var favoritesState by remember { mutableStateOf("") }
-    val context = LocalContext.current
+    var passwordVisible by remember { mutableStateOf(false) }
 
+    // Load profile from DB into text fields
     LaunchedEffect(profile) {
         profile?.let { loaded ->
             nameState = loaded.name
@@ -79,80 +80,67 @@ fun ProfileScreen(
             unfocusedIndicatorColor = OrangeSecondary
         )
 
-
         Text("Create / Edit Profile", style = MaterialTheme.typography.headlineSmall)
+
         TextField(
             value = nameState,
             onValueChange = { nameState = it },
             label = { Text("Name") },
-            colors = textFieldColors,
+            colors = textFieldColors
         )
-        Spacer(modifier = Modifier.height(5.dp))
-
 
         TextField(
             value = emailState,
             onValueChange = { emailState = it },
             label = { Text("Email") },
-            colors = textFieldColors,
+            colors = textFieldColors
         )
-        Spacer(modifier = Modifier.height(5.dp))
-
-        var username by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
 
         TextField(
             value = usernameState,
             onValueChange = { usernameState = it },
             label = { Text("Username") },
-            colors = textFieldColors,
+            colors = textFieldColors
         )
-        Spacer(Modifier.height(5.dp))
 
-        var passwordState by remember { mutableStateOf("") }
-        var passwordVisible by remember { mutableStateOf(false) }
         TextField(
             value = passwordState,
             onValueChange = { passwordState = it },
             label = { Text("Password") },
+            colors = textFieldColors,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                val image = if (passwordVisible)
-                    Icons.Filled.Visibility
-                else
-                    Icons.Filled.VisibilityOff
-
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(imageVector = image, contentDescription = null)
+                    Icon(
+                        imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                        contentDescription = "Toggle Password"
+                    )
                 }
             }
         )
-
-        Spacer(modifier = Modifier.height(5.dp))
 
         TextField(
             value = bioState,
             onValueChange = { bioState = it },
             label = { Text("Bio") },
-            colors = textFieldColors,
+            colors = textFieldColors
         )
-        Spacer(modifier = Modifier.height(5.dp))
 
         TextField(
             value = allergiesState,
             onValueChange = { allergiesState = it },
             label = { Text("Allergies") },
-            colors = textFieldColors,
+            colors = textFieldColors
         )
-        Spacer(modifier = Modifier.height(5.dp))
 
         TextField(
             value = favoritesState,
             onValueChange = { favoritesState = it },
             label = { Text("Favorites") },
-            colors = textFieldColors,
+            colors = textFieldColors
         )
 
+        //  SAVE BUTTON
         Button(
             onClick = {
                 val newProfile = Profile(
@@ -175,6 +163,7 @@ fun ProfileScreen(
             Text("Save Profile", fontSize = 18.sp, color = MaterialTheme.colorScheme.background)
         }
 
+        // MOODS BUTTON
         Button(
             onClick = onBackToMoods,
             colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
@@ -185,22 +174,25 @@ fun ProfileScreen(
             Text("Moods", color = PeachBackground)
         }
 
+        //  HOME BUTTON
         OutlinedButton(
             onClick = onGoHome,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("🏠 Home", color = TealPrimary)
         }
+
+        // LOGO
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 32.dp), // optional top padding
+                .padding(top = 32.dp),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(id = R.drawable.outline_award_meal_24),
                 contentDescription = "App logo",
-                modifier = Modifier.size(150.dp) // adjust size as needed
+                modifier = Modifier.size(150.dp)
             )
         }
     }

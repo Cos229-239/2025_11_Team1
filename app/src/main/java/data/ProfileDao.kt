@@ -15,6 +15,7 @@ interface ProfileDao {
     @Query("SELECT * FROM profiles LIMIT 1")
     suspend fun getProfile(): Profile?
 
-    @Update
-    suspend fun updateProfile(profile: Profile)
+    @Query("DELETE FROM profiles")
+    suspend fun clearProfile()
 }
+

@@ -2,13 +2,13 @@ package com.example.moodkitchen.screens
 
 
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,14 +16,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.moodkitchen.R
-import com.example.moodkitchen.data.Profile
-import com.example.moodkitchen.data.ProfileViewModel
+import viewmodel.ProfileViewModel
 import com.example.moodkitchen.ui.theme.OrangeSecondary
 
 
@@ -37,6 +37,8 @@ fun OnboardingScreen(
     val profile by profileViewModel.profile.collectAsState()
     val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
     var showLoginDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
 
     Column(
         modifier = Modifier
@@ -70,7 +72,14 @@ fun OnboardingScreen(
 
         // Create Profile
         Button(
-            onClick = { onProfileClicked() },
+            onClick = {
+                if (isLoggedIn) {
+                    Toast.makeText(context, "Account already logged in", Toast.LENGTH_SHORT).show()
+                    onContinueClicked() // go to moods screen
+                } else {
+                    onProfileClicked() // go to profile screen
+                }
+            },
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(OrangeSecondary),
             modifier = Modifier.fillMaxWidth(0.8f)
@@ -78,6 +87,8 @@ fun OnboardingScreen(
             Text("Create Profile", fontSize = 18.sp)
         }
 
+
+        // Login dialog
         if (showLoginDialog && profile != null) {
             LoginDialog(
                 profile = profile!!,
@@ -89,5 +100,6 @@ fun OnboardingScreen(
                 onCancel = { showLoginDialog = false }
             )
         }
+
     }
 }
