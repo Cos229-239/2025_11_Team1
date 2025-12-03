@@ -18,8 +18,8 @@ import com.example.moodkitchen.model.Recipe
 
 
 @Composable
-fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Unit, onRecipeClick: (Recipe) -> Unit, onProfileClicked: () -> Unit) {
-    val recipes = RecipeRepository.getRecipesForMood(mood)
+fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Unit, onRecipeClick: (Recipe) -> Unit, onProfileClicked: () -> Unit, userIngredients: List<String> = emptyList()) {
+    val recipes = RecipeRepository.getRecipesForMoodAndIngredients(mood, userIngredients)
 
 
     Column(

@@ -34,7 +34,7 @@ fun OnboardingScreen(
     navController: NavHostController,
     onContinueClicked: () -> Unit,
     onProfileClicked: () -> Unit,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
 ) {
     val profile by profileViewModel.profile.collectAsState()
     val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
@@ -44,7 +44,7 @@ fun OnboardingScreen(
     LaunchedEffect(profile, isLoggedIn) {
         if (profile != null && isLoggedIn) {
             Toast.makeText(context, "Account already logged in", Toast.LENGTH_SHORT).show()
-            onContinueClicked() // auto go to moods if logged in
+            onContinueClicked()
         }
     }
 
@@ -79,6 +79,17 @@ fun OnboardingScreen(
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
             Text("Log In", fontSize = 18.sp)
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        Button(
+            onClick = { navController.navigate(route = "ingredientsScreen") },
+            shape = RoundedCornerShape(size = 16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
+            modifier = Modifier.fillMaxWidth(fraction = 0.8f)
+        ) {
+            Text(text = "Pantry", fontSize = 18.sp)
         }
 
         Spacer(Modifier.height(16.dp))

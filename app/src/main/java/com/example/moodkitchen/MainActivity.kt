@@ -25,6 +25,7 @@ import com.example.moodkitchen.ui.screens.RecipeDetailScreen
 import com.example.moodkitchen.data.RecipeRepository
 import com.example.moodkitchen.screens.LoginDialog
 import com.example.moodkitchen.screens.ProfileScreen
+import com.example.moodkitchen.screens.IngredientsScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -92,27 +93,49 @@ fun MoodKitchenApp() {
             )
         }
 
-
-        composable("moodSelection") {
-            MoodSelectionScreen(
-                onMoodSelected = { selectedMood ->
-                    navController.navigate("recipes/$selectedMood")
-                },
-                onGoHome = { navController.navigate("OnboardingScreen") },
-                onProfileClicked = { navController.navigate("profileScreen") }
+        composable(route = "ingredientsScreen") {
+            IngredientsScreen(
+                navController = navController,
+                onGoHome = { navController.navigate(route = "OnboardingScreen") }
             )
         }
 
-        composable("recipes/{mood}") { backStackEntry ->
+
+        composable(route = "moodSelection/{ingredients}") { backStackEntry ->
+            val ingredientsString = backStackEntry.arguments?.getString("ingredients") ?: ""
+            val ingredientsList = if (ingredientsString.isNotEmpty()) {
+                ingredientsString.split(",")
+            } else {
+                emptyList()
+            }
+
+            MoodSelectionScreen(
+                onMoodSelected = { selectedMood ->
+                    navController.navigate(route = "recipes/$selectedMood/$ingredientsString")
+                },
+                onGoHome = { navController.navigate(route = "OnboardingScreen") },
+                onProfileClicked = { navController.navigate(route = "profileScreen") }
+            )
+        }
+
+        composable(route = "recipes/{mood}/{ingredients}") { backStackEntry ->
             val mood = backStackEntry.arguments?.getString("mood") ?: ""
+            val ingredientsString = backStackEntry.arguments?.getString("ingredients") ?: ""
+            val ingredientsList = if (ingredientsString.isNotEmpty()) {
+                ingredientsString.split(",")
+            } else {
+                emptyList()
+            }
+
             RecipeListScreen(
                 mood = mood,
-                onGoHome = { navController.navigate("OnboardingScreen") },
-                onBackToMoods = { navController.navigate("moodSelection") },
+                onGoHome = { navController.navigate(route = "OnboardingScreen") },
+                onBackToMoods = { navController.navigate(route = "moodSelection/$ingredientsString") },
                 onRecipeClick = { recipe ->
-                    navController.navigate("recipeDetail/${mood}/${recipe.name}")
+                    navController.navigate(route = "recipeDetail/${mood}/${recipe.name}")
                 },
-                onProfileClicked = { navController.navigate("profileScreen") }
+                onProfileClicked = { navController.navigate(route = "profileScreen") },
+                userIngredients = ingredientsList  // Pass the ingredients!
             )
         }
 
