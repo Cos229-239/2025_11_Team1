@@ -15,65 +15,77 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
 import com.example.moodkitchen.model.Recipe
+import androidx.navigation.NavHostController
+import androidx.compose.material3.Scaffold
+import com.example.moodkitchen.screens.BottomNavigationBar
 
 
 @Composable
-fun RecipeListScreen(mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Unit, onRecipeClick: (Recipe) -> Unit, onProfileClicked: () -> Unit, userIngredients: List<String> = emptyList()) {
+fun RecipeListScreen(navController: NavHostController, mood: String, onGoHome: () -> Unit, onBackToMoods: () -> Unit, onRecipeClick: (Recipe) -> Unit, onProfileClicked: () -> Unit, userIngredients: List<String> = emptyList()) {
     val recipes = RecipeRepository.getRecipesForMoodAndIngredients(mood, userIngredients)
 
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PeachBackground)
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Recipes for when you're feeling $mood",
-            style = MaterialTheme.typography.headlineSmall,
-            color = TealPrimary
-        )
-        Spacer(Modifier.height(16.dp))
-        Button(
-            onClick = onBackToMoods,
-            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Text("← Back to Moods", color = PeachBackground)
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(
+                navController = navController,  // You'll need to pass navController as parameter
+                currentRoute = "recipes"
+            )
         }
-        recipes.forEach { recipe ->
-            Card(
+    ) { paddingValues ->
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(PeachBackground)
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Recipes for when you're feeling $mood",
+                style = MaterialTheme.typography.headlineSmall,
+                color = TealPrimary
+            )
+            Spacer(Modifier.height(16.dp))
+            Button(
+                onClick = onBackToMoods,
+                colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
-                    .clickable { onRecipeClick(recipe) },
-                colors = CardDefaults.cardColors(containerColor = OrangeSecondary)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        recipe.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = PeachBackground
-                    )
-                    Text(
-                        recipe.description,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = PeachBackground
-                    )
+                Text("← Back to Moods", color = PeachBackground)
+            }
+            recipes.forEach { recipe ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                        .clickable { onRecipeClick(recipe) },
+                    colors = CardDefaults.cardColors(containerColor = OrangeSecondary)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            recipe.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = PeachBackground
+                        )
+                        Text(
+                            recipe.description,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = PeachBackground
+                        )
+                    }
                 }
             }
-        }
-        Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(24.dp))
 
-        Column {
-            OutlinedButton(onClick = onGoHome, modifier = Modifier.fillMaxWidth()) {
-                Text("🏠 Home", color = TealPrimary)
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedButton(onClick = onProfileClicked, modifier = Modifier.fillMaxWidth()) {
-                Text("👤 Profile", color = TealPrimary)
+            Column {
+                OutlinedButton(onClick = onGoHome, modifier = Modifier.fillMaxWidth()) {
+                    Text("🏠 Home", color = TealPrimary)
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedButton(onClick = onProfileClicked, modifier = Modifier.fillMaxWidth()) {
+                    Text("👤 Profile", color = TealPrimary)
+                }
             }
         }
     }

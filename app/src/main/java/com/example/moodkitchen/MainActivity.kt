@@ -101,7 +101,15 @@ fun MoodKitchenApp() {
         }
 
 
-        composable(route = "moodSelection/{ingredients}") { backStackEntry ->
+        composable(route = "moodSelection/{ingredients}",
+            arguments = listOf(
+                navArgument("ingredients") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                }
+            )
+        ) { backStackEntry ->
             val ingredientsString = backStackEntry.arguments?.getString("ingredients") ?: ""
             val ingredientsList = if (ingredientsString.isNotEmpty()) {
                 ingredientsString.split(",")
@@ -110,6 +118,7 @@ fun MoodKitchenApp() {
             }
 
             MoodSelectionScreen(
+                navController = navController,
                 onMoodSelected = { selectedMood ->
                     navController.navigate(route = "recipes/$selectedMood/$ingredientsString")
                 },
@@ -128,6 +137,7 @@ fun MoodKitchenApp() {
             }
 
             RecipeListScreen(
+                navController = navController,
                 mood = mood,
                 onGoHome = { navController.navigate(route = "OnboardingScreen") },
                 onBackToMoods = { navController.navigate(route = "moodSelection/$ingredientsString") },

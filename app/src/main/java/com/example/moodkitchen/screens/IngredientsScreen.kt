@@ -24,87 +24,113 @@ fun IngredientsScreen(
     var ingredientText by remember { mutableStateOf("") }
     var ingredientsList by remember { mutableStateOf(listOf<String>()) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PeachBackground)
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Text(
-            text = "What's in your Pantry?",
-            fontSize = 32.sp,
-            modifier = Modifier.padding(bottom = 24.dp),
-                    color = TealPrimary
-        )
-
-        // Input field
-        OutlinedTextField(
-            value = ingredientText,
-            onValueChange = { ingredientText = it },
-            label = { Text("Type your ingredients here...") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(Modifier.height(16.dp))
-
-        // ADD button
-        Button(
-            onClick = {
-                if (ingredientText.isNotBlank()) {
-                    ingredientsList = ingredientsList + ingredientText
-                    ingredientText = ""
-                }
-            },
-            shape = RoundedCornerShape(size = 16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "ADD", fontSize = 18.sp)
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(
+                navController = navController,
+                currentRoute = "ingredientsScreen"
+            )
         }
+    ) { paddingValues ->
 
-        Spacer(Modifier.height(24.dp))
-
-        // List of ingredients
-        LazyColumn(
+        Column(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(PeachBackground)
+                .padding(horizontal = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
         ) {
-            items(ingredientsList) { ingredient ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Button(
+                    onClick = { navController.navigate(route = "OnboardingScreen") },
+                    colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
                 ) {
-                    Text(text = ingredient, fontSize = 16.sp)
-                    Button(
-                        onClick = {
-                            ingredientsList = ingredientsList.filter { it != ingredient }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                    Text("← Home")
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+            Text(
+                text = "What's in your Pantry?",
+                fontSize = 32.sp,
+                modifier = Modifier.padding(bottom = 24.dp),
+                color = TealPrimary
+            )
+
+            // Input field
+            OutlinedTextField(
+                value = ingredientText,
+                onValueChange = { ingredientText = it },
+                label = { Text("Type your ingredients here...") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            // ADD button
+            Button(
+                onClick = {
+                    if (ingredientText.isNotBlank()) {
+                        ingredientsList = ingredientsList + ingredientText
+                        ingredientText = ""
+                    }
+                },
+                shape = RoundedCornerShape(size = 16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "ADD", fontSize = 18.sp)
+            }
+
+            Spacer(Modifier.height(24.dp))
+
+            // List of ingredients
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                items(ingredientsList) { ingredient ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Delete")
+                        Text(text = ingredient, fontSize = 16.sp)
+                        Button(
+                            onClick = {
+                                ingredientsList = ingredientsList.filter { it != ingredient }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                        ) {
+                            Text("Delete")
+                        }
                     }
                 }
             }
-        }
 
-        Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
-        // NEXT button
-        Button(
-            onClick = { val ingredientsString = ingredientsList.joinToString(",")
-                navController.navigate(route = "moodSelection/$ingredientsString")
-            },
-            shape = RoundedCornerShape(size = 16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "NEXT", fontSize = 18.sp)
+            // NEXT button
+            Button(
+                onClick = {
+                    val ingredientsString = ingredientsList.joinToString(",")
+                    navController.navigate(route = "moodSelection/$ingredientsString")
+                },
+                shape = RoundedCornerShape(size = 16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "NEXT", fontSize = 18.sp)
+            }
         }
     }
 }

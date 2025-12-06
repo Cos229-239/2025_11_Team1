@@ -96,7 +96,7 @@ fun OnboardingScreen(
 
         // CONTINUE button → always goes to moods
         Button(
-            onClick = { navController.navigate("moodSelection") },
+            onClick = { navController.navigate("moodSelection/") },
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
             modifier = Modifier.fillMaxWidth(0.8f)

@@ -12,11 +12,15 @@ import androidx.compose.ui.unit.sp
 import com.example.moodkitchen.ui.theme.OrangeSecondary
 import com.example.moodkitchen.ui.theme.PeachBackground
 import com.example.moodkitchen.ui.theme.TealPrimary
+import androidx.navigation.NavHostController
+import androidx.compose.material3.Scaffold
+import com.example.moodkitchen.screens.BottomNavigationBar
 
 data class Mood(val emoji: String, val label: String)
 
 @Composable
 fun MoodSelectionScreen(
+    navController: NavHostController,
     onMoodSelected: (String) -> Unit,
     onGoHome: () -> Unit,
     onProfileClicked: () -> Unit
@@ -29,42 +33,52 @@ fun MoodSelectionScreen(
         Mood("😤", "Stressed")
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PeachBackground)
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "How are you feeling today?",
-            style = MaterialTheme.typography.headlineSmall,
-            color = TealPrimary
-        )
-        Spacer(Modifier.height(20.dp))
-
-        moods.forEach { mood ->
-            Button(
-                onClick = { onMoodSelected(mood.label) }, // only send label, not emoji
-                colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-
-                Text("${mood.emoji} ${mood.label}", color = PeachBackground)
-            }
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(
+                navController = navController,
+                currentRoute = "moodSelection"
+            )
         }
-        Spacer(Modifier.height(24.dp))
+    ) { paddingValues ->
 
-        Column {
-            OutlinedButton(onClick = onGoHome, modifier = Modifier.fillMaxWidth()) {
-                Text("🏠 Home", color = TealPrimary)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(PeachBackground)
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "How are you feeling today?",
+                style = MaterialTheme.typography.headlineSmall,
+                color = TealPrimary
+            )
+            Spacer(Modifier.height(20.dp))
+
+            moods.forEach { mood ->
+                Button(
+                    onClick = { onMoodSelected(mood.label) }, // only send label, not emoji
+                    colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+
+                    Text("${mood.emoji} ${mood.label}", color = PeachBackground)
+                }
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedButton(onClick = onProfileClicked, modifier = Modifier.fillMaxWidth()) {
-                Text("👤 Profile", color = TealPrimary)
+            Spacer(Modifier.height(24.dp))
+
+            Column {
+                OutlinedButton(onClick = onGoHome, modifier = Modifier.fillMaxWidth()) {
+                    Text("🏠 Home", color = TealPrimary)
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedButton(onClick = onProfileClicked, modifier = Modifier.fillMaxWidth()) {
+                    Text("👤 Profile", color = TealPrimary)
+                }
             }
         }
     }
