@@ -84,12 +84,13 @@ fun MoodKitchenApp() {
             val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
 
             ProfileScreen(
+                navController = navController,
                 profileViewModel = profileViewModel,
                 profile = profile,
                 isLoggedIn = isLoggedIn,
-                onContinueClicked = { navController.navigate("moodSelection") },
+                onContinueClicked = { navController.navigate(route = "moodSelection/") },
                 onGoHome = { navController.navigate("OnboardingScreen") },
-                onBackToMoods = { navController.navigate("moodSelection") }
+                onBackToMoods = { navController.navigate("moodSelection/") }
             )
         }
 

@@ -27,10 +27,12 @@ import com.example.moodkitchen.ui.theme.OrangeSecondary
 import com.example.moodkitchen.ui.theme.PeachBackground
 import com.example.moodkitchen.ui.theme.TealPrimary
 import com.example.moodkitchen.R
+import androidx.navigation.NavHostController
 
 
 @Composable
 fun ProfileScreen(
+    navController: NavHostController,
     profileViewModel: ProfileViewModel,
     onGoHome: () -> Unit,
     onBackToMoods: () -> Unit,
@@ -166,7 +168,7 @@ fun ProfileScreen(
 
         // MOODS BUTTON
         Button(
-            onClick = onBackToMoods,
+            onClick = { navController.navigate("moodSelection/") },
             colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
             modifier = Modifier
                 .fillMaxWidth()
