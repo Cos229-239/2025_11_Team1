@@ -30,6 +30,8 @@ import com.example.moodkitchen.R
 import androidx.navigation.NavHostController
 
 
+
+
 @Composable
 fun ProfileScreen(
     navController: NavHostController,
@@ -166,24 +168,6 @@ fun ProfileScreen(
             Text("Save Profile", fontSize = 18.sp, color = MaterialTheme.colorScheme.background)
         }
 
-        // MOODS BUTTON
-        Button(
-            onClick = { navController.navigate("moodSelection/") },
-            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Text("Moods", color = PeachBackground)
-        }
-
-        //  HOME BUTTON
-        OutlinedButton(
-            onClick = onGoHome,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("🏠 Home", color = TealPrimary)
-        }
 
         // LOGOUT BUTTON (only show if logged in)
         if (isLoggedIn) {
@@ -191,7 +175,7 @@ fun ProfileScreen(
                 onClick = {
                     profileViewModel.logOut() // clears logged-in state but keeps profile saved
                     Toast.makeText(context, "Logged out successfully", Toast.LENGTH_SHORT).show()
-                    onGoHome()
+                    navController.navigate("OnboardingScreen")
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
                 modifier = Modifier

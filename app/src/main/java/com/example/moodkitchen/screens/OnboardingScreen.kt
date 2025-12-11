@@ -69,7 +69,7 @@ fun OnboardingScreen(
                         showLoginDialog = true
                     } else {
                         Toast.makeText(context, "Account already logged in", Toast.LENGTH_SHORT).show()
-                        navController.navigate("moodSelection")
+                        navController.navigate("moodSelection/")
                     }
                 } else {
                     Toast.makeText(context, "No account found. Please create a profile first.", Toast.LENGTH_SHORT).show()
@@ -123,7 +123,7 @@ fun OnboardingScreen(
                 onLoginSuccess = {
                     profileViewModel.logIn()
                     showLoginDialog = false
-                    navController.navigate("moodSelection")
+                    navController.navigate("moodSelection/")
                 },
                 onCancel = { showLoginDialog = false }
             )

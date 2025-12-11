@@ -18,7 +18,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         AppDatabase::class.java,
         "mood_kitchen_db"
     )
-        .fallbackToDestructiveMigration()
     .build()
 
     private val profileDao = db.profileDao()

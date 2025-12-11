@@ -15,14 +15,23 @@ import androidx.navigation.NavHostController
 import com.example.moodkitchen.ui.theme.OrangeSecondary
 import com.example.moodkitchen.ui.theme.PeachBackground
 import com.example.moodkitchen.ui.theme.TealPrimary
+import com.example.moodkitchen.data.PantryManager
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun IngredientsScreen(
     navController: NavHostController,
     onGoHome: () -> Unit
 ) {
+    val context = LocalContext.current
+    val pantryManager = remember { PantryManager(context) }
+
     var ingredientText by remember { mutableStateOf("") }
-    var ingredientsList by remember { mutableStateOf(listOf<String>()) }
+    var ingredientsList by remember { mutableStateOf(pantryManager.getIngredients()) }
+
+    LaunchedEffect(key1 = ingredientsList) {
+        pantryManager.saveIngredients(ingredientsList)
+    }
 
     Scaffold(
         bottomBar = {
