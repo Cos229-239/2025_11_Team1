@@ -52,18 +52,6 @@ fun IngredientsScreen(
             verticalArrangement = Arrangement.Top
         ) {
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Button(
-                    onClick = { navController.navigate(route = "OnboardingScreen") },
-                    colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
-                ) {
-                    Text("← Home")
-                }
-            }
-
             Spacer(Modifier.height(16.dp))
             Text(
                 text = "What's in your Pantry?",

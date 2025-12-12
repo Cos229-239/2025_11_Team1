@@ -27,11 +27,11 @@ import com.example.moodkitchen.viewmodel.RecipeViewModel
 fun RecipeListScreen(
     navController: NavHostController,
     mood: String,
+    userIngredients: List<String> = emptyList(),
     onGoHome: () -> Unit,
     onBackToMoods: () -> Unit,
-    onRecipeClick: (Recipe) -> Unit,
-    onProfileClicked: () -> Unit,
-    userIngredients: List<String> = emptyList()
+    onRecipeClick: Function<Unit>,
+    onProfileClicked: () -> Unit
 ) {
     val recipeViewModel: RecipeViewModel = viewModel()
     val recipes by recipeViewModel.recipes.collectAsState()
@@ -57,7 +57,7 @@ fun RecipeListScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(color = PeachBackground)
+                .background(PeachBackground)
                 .padding(all = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -66,16 +66,6 @@ fun RecipeListScreen(
                 style = MaterialTheme.typography.headlineSmall,
                 color = TealPrimary
             )
-
-            Spacer(Modifier.height(height = 16.dp))
-
-            Button(
-                onClick = onBackToMoods,
-                colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-            ) {
-                Text(text = "← Back to Moods", color = PeachBackground)
-            }
 
             Spacer(Modifier.height(16.dp))
 
@@ -102,23 +92,11 @@ fun RecipeListScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(recipes) { recipe ->
-                            RecipeCard(recipe = recipe, onClick = { onRecipeClick(recipe) })
+                            RecipeCard(recipe = recipe, onClick = {
+                                navController.navigate("recipeDetail/${mood}/${recipe.name}")
+                            })
                         }
                     }
-                }
-            }
-
-            Spacer(Modifier.height(24.dp))
-
-            Column {
-                OutlinedButton(onClick = onGoHome, modifier = Modifier.fillMaxWidth()) {
-                    Text(text = "🏠 Home", color = TealPrimary)
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedButton(onClick = onProfileClicked, modifier = Modifier.fillMaxWidth()) {
-                    Text(text = "👤 Profile", color = TealPrimary)
                 }
             }
         }
@@ -133,8 +111,7 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit) {
             .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = OrangeSecondary)
     ) {
-        Column(modifier = Modifier.padding(all = 16.dp)) {
-            // Display image from URL if available
+        Column(modifier = Modifier.padding(16.dp)) {
             if (!recipe.imageUrl.isNullOrEmpty()) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)

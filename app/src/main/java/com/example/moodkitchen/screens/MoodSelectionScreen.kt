@@ -69,17 +69,6 @@ fun MoodSelectionScreen(
                     Text("${mood.emoji} ${mood.label}", color = PeachBackground)
                 }
             }
-            Spacer(Modifier.height(24.dp))
-
-            Column {
-                OutlinedButton(onClick = onGoHome, modifier = Modifier.fillMaxWidth()) {
-                    Text("🏠 Home", color = TealPrimary)
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedButton(onClick = onProfileClicked, modifier = Modifier.fillMaxWidth()) {
-                    Text("👤 Profile", color = TealPrimary)
-                }
-            }
         }
     }
 }

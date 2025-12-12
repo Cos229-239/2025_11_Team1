@@ -95,7 +95,7 @@ fun OnboardingScreen(
         Spacer(Modifier.height(16.dp))
 
         // CONTINUE button → always goes to moods
-        Button(
+       /* Button(
             onClick = { navController.navigate("moodSelection/") },
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
@@ -105,6 +105,7 @@ fun OnboardingScreen(
         }
 
         Spacer(Modifier.height(16.dp))
+        */
 
         // CREATE PROFILE button → goes to profile screen
         Button(

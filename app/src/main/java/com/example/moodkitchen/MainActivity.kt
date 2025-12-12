@@ -23,6 +23,7 @@ import androidx.navigation.navArgument
 import viewmodel.ProfileViewModel
 import com.example.moodkitchen.ui.screens.RecipeDetailScreen
 import com.example.moodkitchen.data.RecipeRepository
+import com.example.moodkitchen.model.Recipe
 import com.example.moodkitchen.screens.LoginDialog
 import com.example.moodkitchen.screens.ProfileScreen
 import com.example.moodkitchen.screens.IngredientsScreen
@@ -142,7 +143,7 @@ fun MoodKitchenApp() {
                 mood = mood,
                 onGoHome = { navController.navigate(route = "OnboardingScreen") },
                 onBackToMoods = { navController.navigate(route = "moodSelection/$ingredientsString") },
-                onRecipeClick = { recipe ->
+                onRecipeClick = { recipe: Recipe ->
                     navController.navigate(route = "recipeDetail/${mood}/${recipe.name}")
                 },
                 onProfileClicked = { navController.navigate(route = "profileScreen") },
