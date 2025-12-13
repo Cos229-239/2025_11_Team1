@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.composable
@@ -20,6 +21,7 @@ import com.example.moodkitchen.ui.screens.RecipeListScreen
 import com.example.moodkitchen.ui.theme.MoodKitchenTheme
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.moodkitchen.data.PantryManager
 import viewmodel.ProfileViewModel
 import com.example.moodkitchen.ui.screens.RecipeDetailScreen
 import com.example.moodkitchen.data.RecipeRepository
@@ -121,28 +123,38 @@ fun MoodKitchenApp() {
 
             MoodSelectionScreen(
                 navController = navController,
+                ingredients = ingredientsList,   // pass the pantry
                 onMoodSelected = { selectedMood ->
-                    navController.navigate(route = "recipes/$selectedMood/$ingredientsString")
+                    navController.navigate("recipes/$selectedMood/${ingredientsList.joinToString(",")}")
                 },
-                onGoHome = { navController.navigate(route = "OnboardingScreen") },
-                onProfileClicked = { navController.navigate(route = "profileScreen") }
+                onGoHome = {
+                    if (isLoggedIn) {
+                        navController.navigate("ingredientsScreen") {
+                            popUpTo("OnboardingScreen") { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate("OnboardingScreen")
+                    }
+                },
+                onProfileClicked = { navController.navigate("profileScreen") }
             )
         }
 
         composable(route = "recipes/{mood}/{ingredients}") { backStackEntry ->
             val mood = backStackEntry.arguments?.getString("mood") ?: ""
-            val ingredientsString = backStackEntry.arguments?.getString("ingredients") ?: ""
-            val ingredientsList = if (ingredientsString.isNotEmpty()) {
-                ingredientsString.split(",")
-            } else {
-                emptyList()
-            }
+                val pantryManager = PantryManager(LocalContext.current)
+                val ingredientsList = if (!backStackEntry.arguments?.getString("ingredients").isNullOrEmpty()) {
+                    backStackEntry.arguments!!.getString("ingredients")!!.split(",")
+                } else {
+                    pantryManager.getIngredients()
+                }
 
-            RecipeListScreen(
+
+                RecipeListScreen(
                 navController = navController,
                 mood = mood,
                 onGoHome = { navController.navigate(route = "OnboardingScreen") },
-                onBackToMoods = { navController.navigate(route = "moodSelection/$ingredientsString") },
+                onBackToMoods = { navController.navigate(route = "moodSelection/$ingredientsList") },
                 onRecipeClick = { recipe: Recipe ->
                     navController.navigate(route = "recipeDetail/${mood}/${recipe.name}")
                 },

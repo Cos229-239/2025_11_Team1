@@ -44,9 +44,12 @@ fun OnboardingScreen(
     LaunchedEffect(profile, isLoggedIn) {
         if (profile != null && isLoggedIn) {
             Toast.makeText(context, "Account already logged in", Toast.LENGTH_SHORT).show()
-            onContinueClicked()
+            navController.navigate("ingredientsScreen") {
+                popUpTo("OnboardingScreen") { inclusive = true }
+            }
         }
     }
+
 
     Column(
         modifier = Modifier
@@ -69,7 +72,7 @@ fun OnboardingScreen(
                         showLoginDialog = true
                     } else {
                         Toast.makeText(context, "Account already logged in", Toast.LENGTH_SHORT).show()
-                        navController.navigate("moodSelection/")
+                        navController.navigate("ingredientsScreen")
                     }
                 } else {
                     Toast.makeText(context, "No account found. Please create a profile first.", Toast.LENGTH_SHORT).show()
@@ -124,8 +127,8 @@ fun OnboardingScreen(
                 onLoginSuccess = {
                     profileViewModel.logIn()
                     showLoginDialog = false
-                    navController.navigate("moodSelection/")
-                },
+                    navController.navigate("ingredientsScreen")
+                    },
                 onCancel = { showLoginDialog = false }
             )
         }
