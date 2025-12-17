@@ -18,7 +18,8 @@ class RecipeViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
-    private val API_KEY = "0053addf49534dceb1d433d06dc446fa"
+    private val API_KEY = "8fb2d31ccc7841f1ae4d6fc06d2668bf"
+
 
     fun fetchRecipes(ingredients: List<String>) {
         if (ingredients.isEmpty()) {
