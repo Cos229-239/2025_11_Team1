@@ -17,8 +17,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         application,
         AppDatabase::class.java,
         "mood_kitchen_db"
-    )
-    .build()
+    ).build()
 
     private val profileDao = db.profileDao()
 
@@ -44,20 +43,21 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     fun loadProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             _profile.value = profileDao.getProfile()
-
         }
     }
+
     init {
         loadProfile()
     }
 
     // Log in / Log out functions
     fun logIn() {
-        _isLoggedIn.value = true
+        _isLoggedIn.value = false
     }
 
     fun logOut() {
         viewModelScope.launch(Dispatchers.IO) {
+            profileDao.clearProfile()
             _isLoggedIn.value = false
         }
     }
