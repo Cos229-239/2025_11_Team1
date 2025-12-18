@@ -21,7 +21,7 @@ import com.example.moodkitchen.screens.BottomNavigationBar
 import com.example.moodkitchen.ui.theme.OrangeSecondary
 import com.example.moodkitchen.ui.theme.PeachBackground
 import com.example.moodkitchen.ui.theme.TealPrimary
-import com.example.moodkitchen.viewmodel.RecipeViewModel
+import viewmodel.RecipeViewModel
 
 @Composable
 fun RecipeListScreen(
@@ -93,7 +93,7 @@ fun RecipeListScreen(
                     ) {
                         items(recipes) { recipe ->
                             RecipeCard(recipe = recipe, onClick = {
-                                navController.navigate("recipeDetail/${mood}/${recipe.name}")
+                                navController.navigate("recipeDetail/${mood}/${recipe.id}")
                             })
                         }
                     }
