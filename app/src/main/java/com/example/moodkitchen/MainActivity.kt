@@ -77,8 +77,6 @@ fun MoodKitchenApp() {
         composable("OnboardingScreen") {
             OnboardingScreen(
                 navController = navController,
-                onContinueClicked = { navController.navigate("moodSelection") },
-                onProfileClicked = { navController.navigate("profileScreen") },
                 profileViewModel = profileViewModel
             )
         }

@@ -25,15 +25,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.moodkitchen.R
 import viewmodel.ProfileViewModel
-import com.example.moodkitchen.ui.theme.OrangeSecondary
 import com.example.moodkitchen.ui.theme.TealPrimary
 
 
 @Composable
 fun OnboardingScreen(
     navController: NavHostController,
-    onContinueClicked: () -> Unit,
-    onProfileClicked: () -> Unit,
     profileViewModel: ProfileViewModel,
 ) {
     val profile by profileViewModel.profile.collectAsState()

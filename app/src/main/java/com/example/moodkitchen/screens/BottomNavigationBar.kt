@@ -2,7 +2,6 @@ package com.example.moodkitchen.screens
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.example.moodkitchen.ui.theme.TealPrimary
 
