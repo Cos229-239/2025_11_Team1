@@ -1,4 +1,4 @@
-package com.example.moodkitchen.viewmodel
+package viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +18,7 @@ class RecipeViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
-    private val API_KEY = "8fb2d31ccc7841f1ae4d6fc06d2668bf"
+    private val API_KEY = "6a420ad3bbbf4457a9614b251a492798"
 
 
     fun fetchRecipes(ingredients: List<String>) {
@@ -40,10 +40,14 @@ class RecipeViewModel : ViewModel() {
 
                 val convertedRecipes = response.results.map { spoonRecipe ->
                     Recipe(
+                        id = spoonRecipe.id,
                         name = spoonRecipe.title,
-                        description = spoonRecipe.summary?.replace(Regex("<.*?>"), "") ?: "Delicious recipe",
-                        ingredients = spoonRecipe.extendedIngredients?.map { it.original } ?: emptyList(),
-                        directions = spoonRecipe.instructions?.replace(Regex("<.*?>"), "") ?: "Instructions not available",
+                        description = spoonRecipe.summary?.replace(Regex("<.*?>"), "")
+                            ?: "Delicious recipe",
+                        ingredients = spoonRecipe.extendedIngredients?.map { it.original }
+                            ?: emptyList(),
+                        directions = spoonRecipe.instructions?.replace(Regex("<.*?>"), "")
+                            ?: "Instructions not available",
                         imageRes = 0,
                         imageUrl = spoonRecipe.image
                     )
@@ -57,6 +61,38 @@ class RecipeViewModel : ViewModel() {
             } finally {
                 _isLoading.value = false
             }
+        }
+    }
+
+    suspend fun fetchRecipeById(id: Int): Recipe? {
+        return try {
+            // Fetch full recipe info
+            val response = RetrofitInstance.api.getRecipeInformation(
+                id,
+                API_KEY
+            )
+
+            // Extract directions
+            val directions = if (!response.analyzedInstructions.isNullOrEmpty()) {
+                // Join all steps as plain text
+                response.analyzedInstructions.first().steps.joinToString("\n") { it.step }
+            } else {
+                // fallback
+                response.instructions?.replace(Regex("<.*?>"), "") ?: "Directions not available"
+            }
+
+            // Build Recipe object with only ingredients and directions
+            Recipe(
+                id = response.id,
+                name = response.title,
+                description = "",
+                ingredients = response.extendedIngredients?.map { it.original } ?: emptyList(),
+                directions = directions,
+                imageUrl = response.image
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 }
