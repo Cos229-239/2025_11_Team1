@@ -39,8 +39,8 @@ fun BottomNavigationBar(
         NavigationBarItem(
             icon = { Text("👤") },
             label = { Text("Profile") },
-            selected = currentRoute == "profileScreen",
-            onClick = { navController.navigate("profileScreen") }
+            selected = currentRoute == "profileView",
+            onClick = { navController.navigate("profileView") }
         )
     }
 }

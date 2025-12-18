@@ -28,6 +28,7 @@ import com.example.moodkitchen.data.RecipeRepository
 import com.example.moodkitchen.model.Recipe
 import com.example.moodkitchen.screens.LoginDialog
 import com.example.moodkitchen.screens.ProfileScreen
+import com.example.moodkitchen.screens.ProfileViewScreen
 import com.example.moodkitchen.screens.IngredientsScreen
 
 
@@ -82,18 +83,22 @@ fun MoodKitchenApp() {
             )
         }
 
+        // Profile
         composable("profileScreen") {
-            val profile by profileViewModel.profile.collectAsState()
-            val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
-
             ProfileScreen(
                 navController = navController,
                 profileViewModel = profileViewModel,
-                profile = profile,
-                isLoggedIn = isLoggedIn,
-                onContinueClicked = { navController.navigate(route = "moodSelection/") },
+                onContinueClicked = { navController.navigate("profileView") }
+            )
+        }
+
+        // Profile Detailed View
+        composable("profileView") {
+            ProfileViewScreen(
+                navController = navController,
+                profileViewModel = profileViewModel,
+                onBackToProfile = { navController.navigate("profileScreen") },
                 onGoHome = { navController.navigate("OnboardingScreen") },
-                onBackToMoods = { navController.navigate("moodSelection/") }
             )
         }
 

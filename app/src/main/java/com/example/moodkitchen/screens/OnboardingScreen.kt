@@ -40,6 +40,7 @@ fun OnboardingScreen(
     val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
     var showLoginDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val isExistingProfile = profile != null
 
     LaunchedEffect(profile, isLoggedIn) {
         if (profile != null && isLoggedIn) {
@@ -111,14 +112,27 @@ fun OnboardingScreen(
         */
 
         // CREATE PROFILE button → goes to profile screen
-        Button(
-            onClick = { navController.navigate("profileScreen") },
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
-            modifier = Modifier.fillMaxWidth(0.8f)
-        ) {
-            Text("Create Profile", fontSize = 18.sp)
+        if (!isExistingProfile)
+        {
+            Button(
+                onClick = { navController.navigate("profileScreen") },
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
+                modifier = Modifier.fillMaxWidth(0.8f)
+            ) {
+                Text("Create Profile", fontSize = 18.sp)
+            }
         }
+        else
+            Button(
+                onClick = { navController.navigate("profileScreen") },
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
+                modifier = Modifier.fillMaxWidth(0.8f)
+            ) {
+                Text("Forgot Profile", fontSize = 18.sp)
+            }
+
 
         // LOGIN DIALOG
         if (showLoginDialog && profile != null) {
