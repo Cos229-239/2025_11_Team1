@@ -10,21 +10,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.navigation.compose.NavHost
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.moodkitchen.data.PantryManager
+import com.example.moodkitchen.model.Recipe
+import com.example.moodkitchen.screens.IngredientsScreen
+import com.example.moodkitchen.screens.LoginDialog
 import com.example.moodkitchen.screens.OnboardingScreen
+import com.example.moodkitchen.screens.ProfileScreen
+import com.example.moodkitchen.screens.ProfileViewScreen
 import com.example.moodkitchen.ui.screens.MoodSelectionScreen
+import com.example.moodkitchen.ui.screens.RecipeDetailScreen
 import com.example.moodkitchen.ui.screens.RecipeListScreen
 import com.example.moodkitchen.ui.theme.MoodKitchenTheme
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import viewmodel.ProfileViewModel
-import com.example.moodkitchen.ui.screens.RecipeDetailScreen
-import com.example.moodkitchen.data.RecipeRepository
-import com.example.moodkitchen.screens.LoginDialog
-import com.example.moodkitchen.screens.ProfileScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -72,68 +76,121 @@ fun MoodKitchenApp() {
         composable("OnboardingScreen") {
             OnboardingScreen(
                 navController = navController,
-                onContinueClicked = { navController.navigate("moodSelection") },
-                onProfileClicked = { navController.navigate("profileScreen") },
                 profileViewModel = profileViewModel
             )
         }
 
-        composable("profileScreen") {
-            val profile by profileViewModel.profile.collectAsState()
-            val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
-
+        composable("profileScreen/new") {
             ProfileScreen(
                 profileViewModel = profileViewModel,
-                profile = profile,
-                isLoggedIn = isLoggedIn,
-                onContinueClicked = { navController.navigate("moodSelection") },
-                onGoHome = { navController.navigate("OnboardingScreen") },
-                onBackToMoods = { navController.navigate("moodSelection") }
+                onContinueClicked = { navController.navigate("profileView") },
+                navController = navController,
+                isExistingProfile = false
+            )
+        }
+
+        composable("profileScreen/existing") {
+            ProfileScreen(
+                profileViewModel = profileViewModel,
+                onContinueClicked = { navController.navigate("profileView") },
+                navController = navController,
+                isExistingProfile = true
             )
         }
 
 
-        composable("moodSelection") {
-            MoodSelectionScreen(
-                onMoodSelected = { selectedMood ->
-                    navController.navigate("recipes/$selectedMood")
-                },
+
+        // Profile Detailed View
+        composable("profileView") {
+            ProfileViewScreen(
+                navController = navController,
+                profileViewModel = profileViewModel,
+                onBackToProfile = { navController.navigate("profileScreen") },
                 onGoHome = { navController.navigate("OnboardingScreen") },
-                onProfileClicked = { navController.navigate("profileScreen") }
             )
         }
 
-        composable("recipes/{mood}") { backStackEntry ->
-            val mood = backStackEntry.arguments?.getString("mood") ?: ""
-            RecipeListScreen(
-                mood = mood,
-                onGoHome = { navController.navigate("OnboardingScreen") },
-                onBackToMoods = { navController.navigate("moodSelection") },
-                onRecipeClick = { recipe ->
-                    navController.navigate("recipeDetail/${mood}/${recipe.name}")
-                },
-                onProfileClicked = { navController.navigate("profileScreen") }
+        composable(route = "ingredientsScreen") {
+            IngredientsScreen(
+                navController = navController,
+                onGoHome = { navController.navigate(route = "OnboardingScreen") }
             )
         }
 
-        composable(
-            "recipeDetail/{mood}/{recipeName}",
+
+        composable(route = "moodSelection/{ingredients}",
             arguments = listOf(
-                navArgument("mood") { type = NavType.StringType },
-                navArgument("recipeName") { type = NavType.StringType }
+                navArgument("ingredients") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                }
             )
         ) { backStackEntry ->
-            val mood = backStackEntry.arguments?.getString("mood") ?: ""
-            val recipeName = backStackEntry.arguments?.getString("recipeName") ?: ""
-            val recipe = RecipeRepository.getRecipesForMood(mood)
-                .firstOrNull { it.name == recipeName } ?: return@composable
+            val ingredientsString = backStackEntry.arguments?.getString("ingredients") ?: ""
+            val ingredientsList = if (ingredientsString.isNotEmpty()) {
+                ingredientsString.split(",")
+            } else {
+                emptyList()
+            }
 
+            MoodSelectionScreen(
+                navController = navController,
+                ingredients = ingredientsList,   // pass the pantry
+                onMoodSelected = { selectedMood ->
+                    navController.navigate("recipes/$selectedMood/${ingredientsList.joinToString(",")}")
+                },
+                onGoHome = {
+                    if (isLoggedIn) {
+                        navController.navigate("ingredientsScreen") {
+                            popUpTo("OnboardingScreen") { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate("OnboardingScreen")
+                    }
+                },
+                onProfileClicked = { navController.navigate("profileScreen") }
+            )
+        }
+
+        composable(route = "recipes/{mood}/{ingredients}") { backStackEntry ->
+            val mood = backStackEntry.arguments?.getString("mood") ?: ""
+                val pantryManager = PantryManager(LocalContext.current)
+                val ingredientsList = if (!backStackEntry.arguments?.getString("ingredients").isNullOrEmpty()) {
+                    backStackEntry.arguments!!.getString("ingredients")!!.split(",")
+                } else {
+                    pantryManager.getIngredients()
+                }
+
+
+                RecipeListScreen(
+                navController = navController,
+                mood = mood,
+                onGoHome = { navController.navigate(route = "OnboardingScreen") },
+                onBackToMoods = { navController.navigate(route = "moodSelection/$ingredientsList") },
+                onRecipeClick = { recipe: Recipe ->
+                    navController.navigate("recipeDetail/${mood}/${recipe.id}")
+                },
+                onProfileClicked = { navController.navigate(route = "profileScreen") },
+                userIngredients = ingredientsList  // Pass the ingredients!
+            )
+        }
+
+        composable(route = "recipeDetail/{mood}/{recipeId}",
+            arguments = listOf(
+                navArgument("mood") { type = NavType.StringType },
+                navArgument("recipeId") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getInt("recipeId") ?: return@composable
             RecipeDetailScreen(
-                recipe = recipe,
+                recipeId = recipeId,
+                navController = navController,
                 onBack = { navController.popBackStack() },
                 onGoHome = { navController.navigate("OnboardingScreen") },
                 onProfileClicked = { navController.navigate("profileScreen") }
             )
         }
+
     }
 }

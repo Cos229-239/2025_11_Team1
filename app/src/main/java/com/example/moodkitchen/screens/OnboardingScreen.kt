@@ -25,28 +25,29 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.moodkitchen.R
 import viewmodel.ProfileViewModel
-import com.example.moodkitchen.ui.theme.OrangeSecondary
 import com.example.moodkitchen.ui.theme.TealPrimary
 
 
 @Composable
 fun OnboardingScreen(
     navController: NavHostController,
-    onContinueClicked: () -> Unit,
-    onProfileClicked: () -> Unit,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
 ) {
     val profile by profileViewModel.profile.collectAsState()
     val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
     var showLoginDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val isExistingProfile = profile != null
 
     LaunchedEffect(profile, isLoggedIn) {
         if (profile != null && isLoggedIn) {
             Toast.makeText(context, "Account already logged in", Toast.LENGTH_SHORT).show()
-            onContinueClicked() // auto go to moods if logged in
+            navController.navigate("ingredientsScreen") {
+                popUpTo("OnboardingScreen") { inclusive = true }
+            }
         }
     }
+
 
     Column(
         modifier = Modifier
@@ -69,7 +70,7 @@ fun OnboardingScreen(
                         showLoginDialog = true
                     } else {
                         Toast.makeText(context, "Account already logged in", Toast.LENGTH_SHORT).show()
-                        navController.navigate("moodSelection")
+                        navController.navigate("ingredientsScreen")
                     }
                 } else {
                     Toast.makeText(context, "No account found. Please create a profile first.", Toast.LENGTH_SHORT).show()
@@ -83,9 +84,20 @@ fun OnboardingScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        // CONTINUE button → always goes to moods
         Button(
-            onClick = { navController.navigate("moodSelection") },
+            onClick = { navController.navigate(route = "ingredientsScreen") },
+            shape = RoundedCornerShape(size = 16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
+            modifier = Modifier.fillMaxWidth(fraction = 0.8f)
+        ) {
+            Text(text = "Pantry", fontSize = 18.sp)
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        // CONTINUE button → always goes to moods
+       /* Button(
+            onClick = { navController.navigate("moodSelection/") },
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
             modifier = Modifier.fillMaxWidth(0.8f)
@@ -94,16 +106,32 @@ fun OnboardingScreen(
         }
 
         Spacer(Modifier.height(16.dp))
+        */
 
-        // CREATE PROFILE button → goes to profile screen
+        // CREATE NEW PROFILE → always visible
         Button(
-            onClick = { navController.navigate("profileScreen") },
+            onClick = { navController.navigate("profileScreen/new") },
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
             Text("Create Profile", fontSize = 18.sp)
         }
+
+        Spacer(Modifier.height(16.dp))
+// EXISTING PROFILE → only if profile exists
+        if (profile != null) {
+            Button(
+                onClick = { navController.navigate("profileScreen/existing") },
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
+                modifier = Modifier.fillMaxWidth(0.8f)
+            ) {
+                Text("Forgot Profile", fontSize = 18.sp)
+            }
+        }
+
+
 
         // LOGIN DIALOG
         if (showLoginDialog && profile != null) {
@@ -112,8 +140,8 @@ fun OnboardingScreen(
                 onLoginSuccess = {
                     profileViewModel.logIn()
                     showLoginDialog = false
-                    navController.navigate("moodSelection")
-                },
+                    navController.navigate("ingredientsScreen")
+                    },
                 onCancel = { showLoginDialog = false }
             )
         }

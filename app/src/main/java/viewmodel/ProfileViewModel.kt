@@ -36,16 +36,15 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO) {
             profileDao.insertProfile(profile)
             _profile.value = profileDao.getProfile()
-            _isLoggedIn.value = true
         }
     }
 
     fun loadProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             _profile.value = profileDao.getProfile()
-
         }
     }
+
     init {
         loadProfile()
     }
@@ -57,6 +56,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun logOut() {
         viewModelScope.launch(Dispatchers.IO) {
+            profileDao.clearProfile()
             _isLoggedIn.value = false
         }
     }

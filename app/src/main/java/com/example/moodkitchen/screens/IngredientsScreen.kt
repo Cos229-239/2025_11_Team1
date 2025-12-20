@@ -1,0 +1,133 @@
+package com.example.moodkitchen.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.moodkitchen.ui.theme.OrangeSecondary
+import com.example.moodkitchen.ui.theme.PeachBackground
+import com.example.moodkitchen.ui.theme.TealPrimary
+import com.example.moodkitchen.data.PantryManager
+import androidx.compose.ui.platform.LocalContext
+
+@Composable
+fun IngredientsScreen(
+    navController: NavHostController,
+    onGoHome: () -> Unit
+) {
+    val context = LocalContext.current
+    val pantryManager = remember { PantryManager(context) }
+
+    var ingredientText by remember { mutableStateOf("") }
+    var ingredientsList by remember { mutableStateOf(pantryManager.getIngredients()) }
+
+    LaunchedEffect(key1 = ingredientsList) {
+        pantryManager.saveIngredients(ingredientsList)
+    }
+
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(
+                navController = navController,
+                currentRoute = "ingredientsScreen"
+            )
+        }
+    ) { paddingValues ->
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(PeachBackground)
+                .padding(horizontal = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+
+            Spacer(Modifier.height(16.dp))
+            Text(
+                text = "What's in your Pantry?",
+                fontSize = 32.sp,
+                modifier = Modifier.padding(bottom = 24.dp),
+                color = TealPrimary
+            )
+
+            // Input field
+            OutlinedTextField(
+                value = ingredientText,
+                onValueChange = { ingredientText = it },
+                label = { Text("Type your ingredients here...") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            // ADD button
+            Button(
+                onClick = {
+                    if (ingredientText.isNotBlank()) {
+                        ingredientsList = ingredientsList + ingredientText
+                        ingredientText = ""
+                    }
+                },
+                shape = RoundedCornerShape(size = 16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "ADD", fontSize = 18.sp)
+            }
+
+            Spacer(Modifier.height(24.dp))
+
+            // List of ingredients
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                items(ingredientsList) { ingredient ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = ingredient, fontSize = 16.sp)
+                        Button(
+                            onClick = {
+                                ingredientsList = ingredientsList.filter { it != ingredient }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                        ) {
+                            Text("Delete")
+                        }
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            // NEXT button
+            Button(
+                onClick = {
+                    val ingredientsString = ingredientsList.joinToString(",")
+                    navController.navigate(route = "moodSelection/$ingredientsString")
+                },
+                shape = RoundedCornerShape(size = 16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "NEXT", fontSize = 18.sp)
+            }
+        }
+    }
+}
