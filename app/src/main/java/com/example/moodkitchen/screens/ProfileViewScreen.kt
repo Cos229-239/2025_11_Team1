@@ -159,17 +159,6 @@ fun ProfileViewScreen(
                             Text("Log Out", color = MaterialTheme.colorScheme.background)
                         }
 
-                        Button(
-                            onClick = {
-                                profileViewModel.logOut()
-                                Toast.makeText(context, "Logged out successfully", Toast.LENGTH_SHORT).show()
-                                onGoHome()
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
-                            modifier = Modifier.width(100.dp)
-                        ) {
-                            Text("Temp", color = MaterialTheme.colorScheme.background)
-                        }
                     }
                 }
             }

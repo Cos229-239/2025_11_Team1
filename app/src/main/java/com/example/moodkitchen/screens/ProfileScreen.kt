@@ -38,10 +38,11 @@ fun ProfileScreen(
     profileViewModel: ProfileViewModel,
     onContinueClicked: () -> Unit,
     navController: NavHostController,
+    isExistingProfile: Boolean
 ) {
     val profileState by profileViewModel.profile.collectAsState()
     val context = LocalContext.current
-    val isExistingProfile = profileState != null
+    //val isExistingProfile = profileState != null
     val buttonText = if (isExistingProfile) "Save Profile" else "Create Profile"
 
     var nameState by remember { mutableStateOf("") }
@@ -53,17 +54,28 @@ fun ProfileScreen(
     var favoritesState by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(profileState) {
-        profileState?.let { loaded ->
-            nameState = loaded.name
-            emailState = loaded.email
-            usernameState = loaded.username
-            passwordState = loaded.password
-            bioState = loaded.bio
-            allergiesState = loaded.allergies
-            favoritesState = loaded.favorites
+    LaunchedEffect(profileState, isExistingProfile) {
+        if (isExistingProfile) {
+            profileState?.let { loaded ->
+                nameState = loaded.name
+                emailState = loaded.email
+                usernameState = loaded.username
+                passwordState = loaded.password
+                bioState = loaded.bio
+                allergiesState = loaded.allergies
+                favoritesState = loaded.favorites
+            }
+        } else {
+            nameState = ""
+            emailState = ""
+            usernameState = ""
+            passwordState = ""
+            bioState = ""
+            allergiesState = ""
+            favoritesState = ""
         }
     }
+
 
     val textFieldColors = TextFieldDefaults.colors(
         focusedContainerColor = PeachBackground,

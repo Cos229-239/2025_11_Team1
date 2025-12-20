@@ -80,13 +80,25 @@ fun MoodKitchenApp() {
             )
         }
 
-        composable("profileScreen") {
+        composable("profileScreen/new") {
             ProfileScreen(
-                navController = navController,
                 profileViewModel = profileViewModel,
-                onContinueClicked = { navController.navigate("profileView") }
+                onContinueClicked = { navController.navigate("profileView") },
+                navController = navController,
+                isExistingProfile = false
             )
         }
+
+        composable("profileScreen/existing") {
+            ProfileScreen(
+                profileViewModel = profileViewModel,
+                onContinueClicked = { navController.navigate("profileView") },
+                navController = navController,
+                isExistingProfile = true
+            )
+        }
+
+
 
         // Profile Detailed View
         composable("profileView") {

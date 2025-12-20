@@ -108,27 +108,29 @@ fun OnboardingScreen(
         Spacer(Modifier.height(16.dp))
         */
 
-        // CREATE PROFILE button → goes to profile screen
-        if (!isExistingProfile)
-        {
-            Button(
-                onClick = { navController.navigate("profileScreen") },
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
-                modifier = Modifier.fillMaxWidth(0.8f)
-            ) {
-                Text("Create Profile", fontSize = 18.sp)
-            }
+        // CREATE NEW PROFILE → always visible
+        Button(
+            onClick = { navController.navigate("profileScreen/new") },
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
+            modifier = Modifier.fillMaxWidth(0.8f)
+        ) {
+            Text("Create Profile", fontSize = 18.sp)
         }
-        else
+
+        Spacer(Modifier.height(16.dp))
+// EXISTING PROFILE → only if profile exists
+        if (profile != null) {
             Button(
-                onClick = { navController.navigate("profileScreen") },
+                onClick = { navController.navigate("profileScreen/existing") },
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
                 modifier = Modifier.fillMaxWidth(0.8f)
             ) {
                 Text("Forgot Profile", fontSize = 18.sp)
             }
+        }
+
 
 
         // LOGIN DIALOG
