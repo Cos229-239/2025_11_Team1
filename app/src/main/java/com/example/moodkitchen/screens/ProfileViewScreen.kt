@@ -130,7 +130,7 @@ fun ProfileViewScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Button(
-                        onClick = onBackToProfile,
+                        onClick = { navController.navigate("profileScreen/existing") },
                         colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
                         modifier = Modifier.fillMaxWidth()
                     )
