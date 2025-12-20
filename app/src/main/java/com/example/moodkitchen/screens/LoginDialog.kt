@@ -1,5 +1,6 @@
 package com.example.moodkitchen.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -54,6 +55,7 @@ fun LoginDialog(
         },
         confirmButton = {
             Button(onClick = {
+                Log.d("LOGIN", "typed=[$usernameInput]/[$passwordInput] saved=[${profile?.username}]/[${profile?.password}]")
                 if (usernameInput == profile.username && passwordInput == profile.password) {
                     Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
                     onLoginSuccess()

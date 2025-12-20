@@ -3,6 +3,8 @@ package com.example.moodkitchen.screens
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -22,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.moodkitchen.ui.theme.OrangeSecondary
@@ -33,16 +36,13 @@ import com.example.moodkitchen.R
 @Composable
 fun ProfileScreen(
     profileViewModel: ProfileViewModel,
-    onGoHome: () -> Unit,
-    onBackToMoods: () -> Unit,
     onContinueClicked: () -> Unit,
-    profile: Profile?,
-    isLoggedIn: Boolean,
     navController: NavHostController,
 ) {
-    val profile by profileViewModel.profile.collectAsState()
-    val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
+    val profileState by profileViewModel.profile.collectAsState()
     val context = LocalContext.current
+    val isExistingProfile = profileState != null
+    val buttonText = if (isExistingProfile) "Save Profile" else "Create Profile"
 
     var nameState by remember { mutableStateOf("") }
     var emailState by remember { mutableStateOf("") }
@@ -53,9 +53,8 @@ fun ProfileScreen(
     var favoritesState by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    // Load profile from DB into text fields
-    LaunchedEffect(profile) {
-        profile?.let { loaded ->
+    LaunchedEffect(profileState) {
+        profileState?.let { loaded ->
             nameState = loaded.name
             emailState = loaded.email
             usernameState = loaded.username
@@ -66,53 +65,64 @@ fun ProfileScreen(
         }
     }
 
+    val textFieldColors = TextFieldDefaults.colors(
+        focusedContainerColor = PeachBackground,
+        unfocusedContainerColor = PeachBackground,
+        focusedTextColor = TealPrimary,
+        unfocusedTextColor = TealPrimary,
+        cursorColor = TealPrimary,
+        focusedIndicatorColor = TealPrimary,
+        unfocusedIndicatorColor = OrangeSecondary
+    )
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
                 navController = navController,
-                currentRoute = "profileScreen"
+                currentRoute = "profileView"
             )
         }
-    ) { paddingValues ->
+    )
+    { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-
-            val textFieldColors = TextFieldDefaults.colors(
-                focusedContainerColor = PeachBackground,
-                unfocusedContainerColor = PeachBackground,
-                focusedTextColor = TealPrimary,
-                unfocusedTextColor = TealPrimary,
-                cursorColor = TealPrimary,
-                focusedIndicatorColor = TealPrimary,
-                unfocusedIndicatorColor = OrangeSecondary
-            )
-
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
+        {
             Text("Create / Edit Profile", style = MaterialTheme.typography.headlineSmall)
 
             TextField(
                 value = nameState,
                 onValueChange = { nameState = it },
                 label = { Text("Name") },
-                colors = textFieldColors
+                colors = textFieldColors,
+                maxLines = 1,
+                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                modifier = Modifier.fillMaxWidth()
             )
 
             TextField(
                 value = emailState,
                 onValueChange = { emailState = it },
                 label = { Text("Email") },
-                colors = textFieldColors
+                colors = textFieldColors,
+                maxLines = 1,
+                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                modifier = Modifier.fillMaxWidth()
             )
 
             TextField(
                 value = usernameState,
                 onValueChange = { usernameState = it },
                 label = { Text("Username") },
-                colors = textFieldColors
+                colors = textFieldColors,
+                maxLines = 1,
+                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                modifier = Modifier.fillMaxWidth()
             )
 
             TextField(
@@ -120,6 +130,8 @@ fun ProfileScreen(
                 onValueChange = { passwordState = it },
                 label = { Text("Password") },
                 colors = textFieldColors,
+                maxLines = 1,
+                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -128,79 +140,86 @@ fun ProfileScreen(
                             contentDescription = "Toggle Password"
                         )
                     }
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
             )
 
             TextField(
                 value = bioState,
                 onValueChange = { bioState = it },
                 label = { Text("Bio") },
-                colors = textFieldColors
+                colors = textFieldColors,
+                modifier = Modifier.fillMaxWidth()
             )
 
             TextField(
                 value = allergiesState,
                 onValueChange = { allergiesState = it },
                 label = { Text("Allergies") },
-                colors = textFieldColors
+                colors = textFieldColors,
+                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                modifier = Modifier.fillMaxWidth()
             )
 
             TextField(
                 value = favoritesState,
                 onValueChange = { favoritesState = it },
                 label = { Text("Favorites") },
-                colors = textFieldColors
+                colors = textFieldColors,
+                maxLines = 1,
+                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                modifier = Modifier.fillMaxWidth()
             )
-
-            //  SAVE BUTTON
             Button(
-                onClick = {
-                    val newProfile = Profile(
-                        name = nameState,
-                        email = emailState,
-                        username = usernameState,
-                        password = passwordState,
-                        bio = bioState,
-                        allergies = allergiesState,
-                        favorites = favoritesState
-                    )
-                    profileViewModel.saveProfile(newProfile)
+                onClick = onClick@
+                {
+                    val profileToSave = if (isExistingProfile) {
+                        profileState!!.copy(
+                            name = nameState,
+                            email = emailState,
+                            username = usernameState,
+                            password = passwordState,
+                            bio = bioState,
+                            allergies = allergiesState,
+                            favorites = favoritesState
+                        )
+                    } else {
+                        Profile(
+                            name = nameState,
+                            email = emailState,
+                            username = usernameState,
+                            password = passwordState,
+                            bio = bioState,
+                            allergies = allergiesState,
+                            favorites = favoritesState
+                        )
+                    }
+
+                    profileViewModel.saveProfile(profileToSave)
+
                     Toast.makeText(context, "Profile info saved!", Toast.LENGTH_SHORT).show()
+                    onContinueClicked()
                 },
+
                 colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 12.dp)
-            ) {
-                Text("Save Profile", fontSize = 18.sp, color = MaterialTheme.colorScheme.background)
+            )
+            {
+                Text(buttonText, fontSize = 18.sp, color = MaterialTheme.colorScheme.background)
             }
 
 
-            // LOGOUT BUTTON (only show if logged in)
-            if (isLoggedIn) {
-                Button(
-                    onClick = {
-                        profileViewModel.logOut() // clears logged-in state but keeps profile saved
-                        Toast.makeText(context, "Logged out successfully", Toast.LENGTH_SHORT)
-                            .show()
-                        onGoHome()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("Log Out", color = MaterialTheme.colorScheme.background)
-                }
-            }
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // LOGO
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 32.dp),
                 contentAlignment = Alignment.Center
-            ) {
+            )
+            {
                 Image(
                     painter = painterResource(id = R.drawable.outline_award_meal_24),
                     contentDescription = "App logo",
@@ -208,5 +227,27 @@ fun ProfileScreen(
                 )
             }
         }
+
+        /* Logout Button
+            if (loggedInState) {
+                Button(
+                    onClick = {
+                        profileViewModel.logOut()
+                        Toast.makeText(context, "Logged out successfully", Toast.LENGTH_SHORT).show()
+                        onGoHome()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text("Log Out", fontSize = 18.sp, color = MaterialTheme.colorScheme.background)
+                }
+            } */
+
+
+
     }
 }
+
+
