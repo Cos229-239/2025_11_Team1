@@ -23,6 +23,7 @@ import com.example.moodkitchen.screens.IngredientsScreen
 import com.example.moodkitchen.screens.LoginDialog
 import com.example.moodkitchen.screens.OnboardingScreen
 import com.example.moodkitchen.screens.ProfileScreen
+import com.example.moodkitchen.screens.ProfileViewScreen
 import com.example.moodkitchen.ui.screens.MoodSelectionScreen
 import com.example.moodkitchen.ui.screens.RecipeDetailScreen
 import com.example.moodkitchen.ui.screens.RecipeListScreen
@@ -75,24 +76,37 @@ fun MoodKitchenApp() {
         composable("OnboardingScreen") {
             OnboardingScreen(
                 navController = navController,
-                onContinueClicked = { navController.navigate("moodSelection") },
-                onProfileClicked = { navController.navigate("profileScreen") },
                 profileViewModel = profileViewModel
             )
         }
 
-        composable("profileScreen") {
-            val profile by profileViewModel.profile.collectAsState()
-            val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
-
+        composable("profileScreen/new") {
             ProfileScreen(
+                profileViewModel = profileViewModel,
+                onContinueClicked = { navController.navigate("profileView") },
+                navController = navController,
+                isExistingProfile = false
+            )
+        }
+
+        composable("profileScreen/existing") {
+            ProfileScreen(
+                profileViewModel = profileViewModel,
+                onContinueClicked = { navController.navigate("profileView") },
+                navController = navController,
+                isExistingProfile = true
+            )
+        }
+
+
+
+        // Profile Detailed View
+        composable("profileView") {
+            ProfileViewScreen(
                 navController = navController,
                 profileViewModel = profileViewModel,
-                profile = profile,
-                isLoggedIn = isLoggedIn,
-                onContinueClicked = { navController.navigate(route = "moodSelection/") },
+                onBackToProfile = { navController.navigate("profileScreen") },
                 onGoHome = { navController.navigate("OnboardingScreen") },
-                onBackToMoods = { navController.navigate("moodSelection/") }
             )
         }
 
